@@ -104,35 +104,59 @@ function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1400px] px-5 lg:px-8 py-20">
-        <div className="flex items-end justify-between mb-10">
-          <div>
-            <p className="text-[11px] tracking-brand uppercase text-muted-foreground">01 — Categories</p>
-            <h2 className="font-serif text-4xl md:text-5xl mt-2">Shop by category</h2>
+      <BrandMarquee />
+
+      <section className="bg-foreground text-cream">
+        <div className="mx-auto max-w-[1400px] px-5 lg:px-8 py-20 md:py-28">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <p className="text-[11px] tracking-brand uppercase opacity-60">01 — The Edit</p>
+              <h2 className="font-serif italic text-5xl md:text-6xl mt-3">
+                Curated <span className="text-gradient-gold">collections</span>
+              </h2>
+              <p className="mt-3 text-sm opacity-70 max-w-md">
+                Six worlds, hand-picked. From everyday tech to hostel-ready essentials.
+              </p>
+            </div>
+            <Link to="/products" search={{ category: "all" }} className="hidden md:inline-flex items-center gap-2 text-[11px] tracking-brand uppercase font-semibold border-b border-cream/40 pb-1 hover:border-cream">
+              View all <ArrowRight className="h-3 w-3" />
+            </Link>
           </div>
-          <Link to="/products" search={{ category: "all" }} className="hidden md:inline-flex items-center gap-2 text-[11px] tracking-brand uppercase font-semibold hover:opacity-60">
-            View all <ArrowRight className="h-3 w-3" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-          {categories.map((c, i) => {
-            const sample = products.find((p) => p.category === c.id)!;
-            return (
-              <Link key={c.id} to="/products" search={{ category: c.id }} className="group block">
-                <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
-                  <img src={sample.image} alt={c.label} className="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-700" />
-                  <span className="absolute top-3 left-3 text-[10px] tracking-brand uppercase font-semibold bg-background px-2 py-1">
-                    0{i + 1}
-                  </span>
-                </div>
-                <div className="mt-3 flex items-center justify-between">
-                  <h3 className="text-sm font-semibold uppercase tracking-wide">{c.label}</h3>
-                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition" />
-                </div>
-                <p className="text-xs text-muted-foreground">{c.blurb}</p>
-              </Link>
-            );
-          })}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
+            {categories.map((c, i) => {
+              const sample = products.find((p) => p.category === c.id)!;
+              return (
+                <Link
+                  key={c.id}
+                  to="/products"
+                  search={{ category: c.id }}
+                  className="group relative block aspect-[4/5] overflow-hidden rounded-sm border border-cream/10 hover:border-cream/30 transition"
+                >
+                  <img
+                    src={sample.image}
+                    alt={c.label}
+                    className="absolute inset-0 h-full w-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1200ms]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/40 to-transparent" />
+                  <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-cream">
+                    <span className="text-[10px] tracking-brand uppercase opacity-70">No. 0{i + 1}</span>
+                    <span className="text-[10px] tracking-brand uppercase opacity-70">{c.blurb}</span>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 p-5 md:p-7 text-cream">
+                    <h3 className="font-serif italic text-3xl md:text-4xl leading-tight">
+                      {c.label}
+                    </h3>
+                    <div className="mt-3 flex items-center justify-between">
+                      <span className="text-[10px] tracking-brand uppercase opacity-80">Explore</span>
+                      <span className="h-9 w-9 grid place-items-center border border-cream/60 group-hover:bg-cream group-hover:text-foreground transition">
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </section>
 
