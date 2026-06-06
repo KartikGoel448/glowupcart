@@ -1,34 +1,37 @@
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-border bg-gradient-soft">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 grid gap-8 md:grid-cols-4">
-        <div>
-          <h3 className="text-lg font-bold text-gradient">GlowCart</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Bright finds for everyday life — fashion, tech, and beyond.
+    <footer className="mt-32 border-t border-border">
+      <div className="mx-auto max-w-[1400px] px-5 lg:px-8 py-16 grid gap-10 md:grid-cols-4">
+        <div className="md:col-span-2">
+          <p className="text-xl font-black tracking-brand uppercase">GlowCart</p>
+          <p className="mt-4 text-sm text-muted-foreground max-w-sm leading-relaxed">
+            Essentials & elevated everyday — fashion, tech, and the in-between.
+            Designed to last, priced fair, shipped worldwide.
           </p>
+          <form className="mt-6 flex max-w-sm border-b border-foreground/30 pb-2">
+            <input
+              type="email"
+              placeholder="Email address"
+              className="flex-1 bg-transparent text-sm placeholder:text-muted-foreground focus:outline-none"
+            />
+            <button className="text-[11px] tracking-brand uppercase font-semibold">Subscribe →</button>
+          </form>
         </div>
         <div>
-          <h4 className="text-sm font-semibold mb-3">Shop</h4>
-          <ul className="space-y-2 text-sm text-muted-foreground">
+          <h4 className="text-[11px] tracking-brand uppercase font-semibold mb-4">Shop</h4>
+          <ul className="space-y-2.5 text-sm">
             <li>Clothes</li><li>Mobiles</li><li>Tablets</li><li>Laptops</li><li>Accessories</li>
           </ul>
         </div>
         <div>
-          <h4 className="text-sm font-semibold mb-3">Students</h4>
-          <p className="text-sm text-muted-foreground">
-            Use code <span className="font-bold text-primary">STUDENT15</span> for 15% off your order.
-          </p>
-        </div>
-        <div>
-          <h4 className="text-sm font-semibold mb-3">Support</h4>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>Shipping</li><li>Returns</li><li>Contact</li><li>FAQ</li>
+          <h4 className="text-[11px] tracking-brand uppercase font-semibold mb-4">Info</h4>
+          <ul className="space-y-2.5 text-sm">
+            <li>Student discount</li><li>Shipping & returns</li><li>Contact</li><li>FAQ</li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} GlowCart. Demo storefront.
+      <div className="border-t border-border py-5 text-center text-[11px] tracking-brand uppercase text-muted-foreground">
+        © {new Date().getFullYear()} GlowCart
       </div>
     </footer>
   );

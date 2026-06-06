@@ -1,161 +1,188 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, GraduationCap, Truck, ShieldCheck, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { categories, products } from "@/lib/products";
 import { ProductCard } from "@/components/ProductCard";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "GlowCart — Bright finds for everyday life" },
-      { name: "description", content: "Shop clothes, mobiles, tablets, laptops & accessories. Students save 15% with STUDENT15." },
+      { title: "GlowCart — Essentials & elevated everyday" },
+      { name: "description", content: "Clothes, mobiles, tablets, laptops & accessories. Students save 15% with STUDENT15." },
     ],
   }),
   component: Home,
 });
 
+const slides = [
+  {
+    image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=2000&q=80",
+    eyebrow: "Summer drop",
+    title: "SUMMER",
+    titleAlt: "SALE",
+    blurb: "Up to 50% off our favourite styles & colours for the season.",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=2000&q=80",
+    eyebrow: "New arrivals",
+    title: "TECH",
+    titleAlt: "DROP",
+    blurb: "Latest phones, tablets and laptops — built for the way you work.",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=2000&q=80",
+    eyebrow: "Students",
+    title: "STUDY",
+    titleAlt: "MODE",
+    blurb: "15% off everything with code STUDENT15. Built for the long term.",
+  },
+];
+
 function Home() {
-  const featured = products.filter((p) => p.tag).slice(0, 8);
+  const [slide, setSlide] = useState(0);
+  const featured = products.filter((p) => p.tag).slice(0, 4);
   const trending = products.slice(0, 8);
+  const s = slides[slide];
 
   return (
     <div>
-      {/* HERO */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-soft" aria-hidden />
-        <div className="absolute -top-40 -right-40 h-[28rem] w-[28rem] rounded-full bg-gradient-hero opacity-30 blur-3xl" aria-hidden />
-        <div className="absolute -bottom-32 -left-20 h-[24rem] w-[24rem] rounded-full bg-gradient-sunset opacity-25 blur-3xl" aria-hidden />
+      <section className="relative">
+        <div className="relative h-[78vh] min-h-[520px] max-h-[820px] overflow-hidden">
+          <img key={s.image} src={s.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-foreground/15" />
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-background/80 backdrop-blur border border-border shadow-soft">
-              <Sparkles className="h-3.5 w-3.5 text-primary" />
-              New drops every week
-            </span>
-            <h1 className="mt-5 text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight">
-              Bright finds.
-              <br />
-              <span className="text-gradient">Brighter you.</span>
+          <div className="absolute inset-0 flex items-center justify-center text-center px-6">
+            <h1 className="leading-[0.85] font-black tracking-tight">
+              <span className="block text-cream hero-outline-text text-[18vw] md:text-[16vw] lg:text-[180px]">
+                {s.title}
+              </span>
+              <span className="block text-cream text-[22vw] md:text-[20vw] lg:text-[220px] -mt-[3vw]">
+                {s.titleAlt}
+              </span>
             </h1>
-            <p className="mt-5 text-lg text-muted-foreground max-w-lg">
-              Fashion, phones, laptops & more — handpicked for taste and value.
-              Students enjoy 15% off everything with <span className="font-bold text-foreground">STUDENT15</span>.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                to="/products"
-                search={{ category: "all" }}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-hero text-primary-foreground font-semibold shadow-pop hover:opacity-95 transition"
-              >
-                Shop now <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                to="/products"
-                search={{ category: "laptops" }}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-background font-semibold hover:bg-secondary transition"
-              >
-                Explore laptops
-              </Link>
-            </div>
-
-            <div className="mt-10 grid grid-cols-3 gap-4 max-w-md">
-              {[
-                { icon: Truck, label: "Free shipping" },
-                { icon: ShieldCheck, label: "2-year warranty" },
-                { icon: GraduationCap, label: "Student perks" },
-              ].map((f) => (
-                <div key={f.label} className="text-center">
-                  <div className="mx-auto h-10 w-10 rounded-xl bg-background border border-border grid place-items-center shadow-card">
-                    <f.icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <p className="mt-2 text-xs font-medium text-muted-foreground">{f.label}</p>
-                </div>
-              ))}
-            </div>
           </div>
 
-          <div className="relative">
-            <div className="grid grid-cols-2 gap-4">
-              <img src={products[4].image} alt="" className="rounded-3xl aspect-[3/4] object-cover shadow-pop" />
-              <div className="space-y-4 pt-10">
-                <img src={products[9].image} alt="" className="rounded-3xl aspect-square object-cover shadow-card" />
-                <img src={products[12].image} alt="" className="rounded-3xl aspect-square object-cover shadow-card" />
-              </div>
+          <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-cream">
+            <div className="flex items-center gap-3 text-[11px] tracking-brand">
+              <button
+                onClick={() => setSlide((slide - 1 + slides.length) % slides.length)}
+                className="h-8 w-8 grid place-items-center border border-cream/60 hover:bg-cream hover:text-foreground transition"
+                aria-label="Previous"
+              ><ChevronLeft className="h-4 w-4" /></button>
+              <span className="font-semibold">
+                {String(slide + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+              </span>
+              <button
+                onClick={() => setSlide((slide + 1) % slides.length)}
+                className="h-8 w-8 grid place-items-center border border-cream/60 hover:bg-cream hover:text-foreground transition"
+                aria-label="Next"
+              ><ChevronRight className="h-4 w-4" /></button>
             </div>
-            <div className="absolute -bottom-6 -left-6 bg-card border border-border rounded-2xl px-5 py-4 shadow-pop max-w-[14rem]">
-              <p className="text-xs text-muted-foreground">Student deal</p>
-              <p className="font-bold text-lg">15% off everything</p>
-              <p className="text-xs mt-1 text-primary font-semibold">Code: STUDENT15</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CATEGORIES */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Shop by category</h2>
-            <p className="text-muted-foreground mt-1">Pick your vibe.</p>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {categories.map((c) => (
             <Link
-              key={c.id}
               to="/products"
-              search={{ category: c.id }}
-              className="group relative overflow-hidden rounded-2xl p-6 bg-card border border-border shadow-card hover:shadow-pop hover:-translate-y-1 transition-all"
+              search={{ category: "all" }}
+              className="hidden md:inline-flex items-center gap-2 bg-cream text-foreground px-6 py-3 text-[11px] tracking-brand uppercase font-semibold hover:bg-foreground hover:text-cream transition"
             >
-              <div className="absolute -right-6 -bottom-6 h-24 w-24 rounded-full bg-gradient-hero opacity-10 group-hover:opacity-30 transition" />
-              <div className="text-4xl">{c.emoji}</div>
-              <h3 className="mt-4 font-bold">{c.label}</h3>
-              <p className="text-xs text-muted-foreground mt-1">{c.blurb}</p>
-              <span className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary">
-                Browse <ArrowRight className="h-3 w-3" />
-              </span>
+              Shop the drop <ArrowRight className="h-3 w-3" />
             </Link>
-          ))}
+          </div>
         </div>
-      </section>
 
-      {/* STUDENT BANNER */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-hero p-8 md:p-12 text-primary-foreground shadow-pop">
-          <div className="absolute -top-10 -right-10 h-48 w-48 rounded-full bg-white/15 blur-2xl" />
-          <div className="absolute bottom-0 left-0 h-32 w-32 rounded-full bg-sun/40 blur-2xl" />
-          <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div>
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur text-xs font-bold">
-                <GraduationCap className="h-4 w-4" /> Students
-              </span>
-              <h2 className="mt-3 text-3xl md:text-4xl font-extrabold">15% off your whole cart.</h2>
-              <p className="mt-2 text-primary-foreground/85 max-w-xl">
-                Apply the code at checkout. Works on everything — phones, laptops, fits, you name it.
-              </p>
-            </div>
-            <div className="bg-background text-foreground rounded-2xl px-6 py-4 shadow-soft text-center">
-              <p className="text-xs text-muted-foreground">Promo code</p>
-              <p className="text-2xl font-extrabold tracking-widest text-gradient">STUDENT15</p>
-            </div>
+        <div className="mx-auto max-w-[1400px] px-5 lg:px-8 py-8 grid md:grid-cols-3 gap-6 items-start border-b border-border">
+          <p className="text-[11px] tracking-brand uppercase text-muted-foreground">{s.eyebrow}</p>
+          <h2 className="font-serif text-2xl md:text-3xl leading-snug md:col-span-1">{s.blurb}</h2>
+          <div className="md:text-right">
+            <Link
+              to="/products"
+              search={{ category: "all" }}
+              className="inline-flex items-center gap-2 text-[11px] tracking-brand uppercase font-semibold border-b border-foreground pb-1 hover:opacity-60"
+            >
+              Explore collection <ArrowRight className="h-3 w-3" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* FEATURED */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-        <div className="flex items-end justify-between mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Featured deals</h2>
-          <Link to="/products" search={{ category: "all" }} className="text-sm font-semibold text-primary hover:underline">View all →</Link>
+      <section className="mx-auto max-w-[1400px] px-5 lg:px-8 py-20">
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <p className="text-[11px] tracking-brand uppercase text-muted-foreground">01 — Categories</p>
+            <h2 className="font-serif text-4xl md:text-5xl mt-2">Shop by category</h2>
+          </div>
+          <Link to="/products" search={{ category: "all" }} className="hidden md:inline-flex items-center gap-2 text-[11px] tracking-brand uppercase font-semibold hover:opacity-60">
+            View all <ArrowRight className="h-3 w-3" />
+          </Link>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+          {categories.map((c, i) => {
+            const sample = products.find((p) => p.category === c.id)!;
+            return (
+              <Link key={c.id} to="/products" search={{ category: c.id }} className="group block">
+                <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+                  <img src={sample.image} alt={c.label} className="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-700" />
+                  <span className="absolute top-3 left-3 text-[10px] tracking-brand uppercase font-semibold bg-background px-2 py-1">
+                    0{i + 1}
+                  </span>
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide">{c.label}</h3>
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition" />
+                </div>
+                <p className="text-xs text-muted-foreground">{c.blurb}</p>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1400px] px-5 lg:px-8 py-12 border-t border-border">
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <p className="text-[11px] tracking-brand uppercase text-muted-foreground">02 — Featured</p>
+            <h2 className="font-serif text-4xl md:text-5xl mt-2">Editor's picks</h2>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8">
           {featured.map((p) => <ProductCard key={p.id} product={p} />)}
         </div>
       </section>
 
-      {/* TRENDING */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-8">Trending now</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+      <section className="mt-24 bg-foreground text-background">
+        <div className="mx-auto max-w-[1400px] px-5 lg:px-8 py-20 md:py-28 grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <p className="text-[11px] tracking-brand uppercase opacity-70">Student discount</p>
+            <h2 className="font-serif text-5xl md:text-7xl mt-3 leading-[0.95]">
+              Built for<br /> the long study.
+            </h2>
+            <p className="mt-6 max-w-md text-sm opacity-80 leading-relaxed">
+              15% off everything, anytime. Apply <span className="font-bold">STUDENT15</span> at checkout —
+              no verification, no expiry, no fuss.
+            </p>
+            <Link to="/products" search={{ category: "laptops" }} className="mt-8 inline-flex items-center gap-2 bg-background text-foreground px-6 py-3 text-[11px] tracking-brand uppercase font-semibold hover:opacity-90">
+              Shop study essentials <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+          <div className="relative aspect-[4/5] overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80" alt="" className="h-full w-full object-cover" />
+            <div className="absolute top-4 left-4 right-4 flex justify-between text-[11px] tracking-brand opacity-90">
+              <span>STUDENT15</span>
+              <span>15% OFF</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1400px] px-5 lg:px-8 py-20">
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <p className="text-[11px] tracking-brand uppercase text-muted-foreground">03 — Trending</p>
+            <h2 className="font-serif text-4xl md:text-5xl mt-2">New this week</h2>
+          </div>
+          <Link to="/products" search={{ category: "all" }} className="hidden md:inline-flex items-center gap-2 text-[11px] tracking-brand uppercase font-semibold hover:opacity-60">
+            Shop all <ArrowRight className="h-3 w-3" />
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8">
           {trending.map((p) => <ProductCard key={p.id} product={p} />)}
         </div>
       </section>
