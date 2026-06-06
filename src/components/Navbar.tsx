@@ -67,6 +67,7 @@ export function Navbar() {
               { label: "Tablets", category: "tablets" as const },
               { label: "Laptops", category: "laptops" as const },
               { label: "Accessories", category: "accessories" as const },
+              { label: "College Essentials", category: "college" as const },
             ].map((l) => (
               <Link
                 key={l.label}
