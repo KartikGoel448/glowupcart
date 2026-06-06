@@ -134,3 +134,18 @@
   -webkit-text-stroke: 2px var(--cream);
   color: transparent;
 }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@utility animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+
+@utility text-gradient-gold {
+  background: linear-gradient(135deg, #d4af37 0%, #f7e8a4 50%, #b8860b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

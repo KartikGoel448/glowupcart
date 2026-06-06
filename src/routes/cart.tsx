@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Trash2, Plus, Minus, ShoppingBag, Tag, X, CheckCircle2 } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
+import { inr } from "@/lib/format";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/cart")({
@@ -37,8 +38,8 @@ function CartPage() {
     );
   }
 
-  const shipping = subtotal >= 100 ? 0 : 9.99;
-  const grandTotal = +(total + shipping).toFixed(2);
+  const shipping = subtotal >= 2000 ? 0 : 99;
+  const grandTotal = Math.round(total + shipping);
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
@@ -69,8 +70,8 @@ function CartPage() {
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-bold">${lineTotal.toFixed(2)}</p>
-                <p className="text-xs text-muted-foreground">${product.price} each</p>
+                <p className="font-bold">{inr(lineTotal)}</p>
+                <p className="text-xs text-muted-foreground">{inr(product.price)} each</p>
               </div>
             </div>
           ))}
@@ -86,21 +87,21 @@ function CartPage() {
             <div className="mt-4 space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                <span className="font-semibold">{inr(subtotal)}</span>
               </div>
               {discount > 0 && (
                 <div className="flex justify-between text-primary">
                   <span>Student discount (15%)</span>
-                  <span className="font-semibold">−${discount.toFixed(2)}</span>
+                  <span className="font-semibold">−{inr(discount)}</span>
                 </div>
               )}
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Shipping</span>
-                <span className="font-semibold">{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                <span className="font-semibold">{shipping === 0 ? "Free" : inr(shipping)}</span>
               </div>
               <div className="border-t border-border pt-3 mt-3 flex justify-between text-base">
                 <span className="font-bold">Total</span>
-                <span className="font-extrabold text-gradient text-xl">${grandTotal.toFixed(2)}</span>
+                <span className="font-extrabold text-xl">{inr(grandTotal)}</span>
               </div>
             </div>
 
@@ -151,7 +152,7 @@ function CartPage() {
               Checkout
             </button>
             <p className="text-[11px] text-center text-muted-foreground mt-3">
-              {subtotal < 100 ? `Add $${(100 - subtotal).toFixed(2)} more for free shipping` : "You unlocked free shipping 🎉"}
+              {subtotal < 2000 ? `Add ${inr(2000 - subtotal)} more for free shipping` : "You unlocked free shipping 🎉"}
             </p>
           </div>
         </aside>

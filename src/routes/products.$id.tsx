@@ -3,6 +3,7 @@ import { Star, ShoppingBag, ArrowLeft, Truck, ShieldCheck, RefreshCw } from "luc
 import { useState } from "react";
 import { getProduct, products } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
+import { inr } from "@/lib/format";
 import { ProductCard } from "@/components/ProductCard";
 import { toast } from "sonner";
 
@@ -68,11 +69,11 @@ function ProductDetail() {
           </div>
 
           <div className="mt-5 flex items-baseline gap-3">
-            <span className="text-4xl font-extrabold text-gradient">${product.price}</span>
-            {product.oldPrice && <span className="text-lg line-through text-muted-foreground">${product.oldPrice}</span>}
+            <span className="text-4xl font-extrabold">{inr(product.price)}</span>
+            {product.oldPrice && <span className="text-lg line-through text-muted-foreground">{inr(product.oldPrice)}</span>}
             {product.oldPrice && (
               <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-accent text-accent-foreground">
-                Save ${product.oldPrice - product.price}
+                Save {inr(product.oldPrice - product.price)}
               </span>
             )}
           </div>

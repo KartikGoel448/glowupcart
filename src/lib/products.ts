@@ -1,4 +1,4 @@
-export type Category = "clothes" | "mobiles" | "tablets" | "laptops" | "accessories";
+export type Category = "clothes" | "mobiles" | "tablets" | "laptops" | "accessories" | "college";
 
 export interface Product {
   id: string;
@@ -17,33 +17,66 @@ const u = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=cro
 
 export const categories: { id: Category; label: string; emoji: string; blurb: string }[] = [
   { id: "clothes", label: "Clothes", emoji: "👕", blurb: "Streetwear & essentials" },
-  { id: "mobiles", label: "Mobiles", emoji: "📱", blurb: "Latest smartphones" },
+  { id: "mobiles", label: "Mobiles", emoji: "📱", blurb: "Flagship smartphones" },
   { id: "tablets", label: "Tablets", emoji: "📲", blurb: "Powerful & portable" },
   { id: "laptops", label: "Laptops", emoji: "💻", blurb: "Study & create" },
   { id: "accessories", label: "Accessories", emoji: "🎧", blurb: "Sound & style" },
+  { id: "college", label: "College Essentials", emoji: "🎓", blurb: "Hostel-ready kit" },
 ];
 
 export const products: Product[] = [
-  { id: "p1", name: "Oversized Graphic Tee", brand: "Urban Co.", price: 29, oldPrice: 45, category: "clothes", image: u("photo-1521572163474-6864f9cf17ab"), rating: 4.6, description: "Heavyweight cotton oversized tee with bold print.", tag: "Bestseller" },
-  { id: "p2", name: "Denim Jacket Classic", brand: "Indigo Lab", price: 79, category: "clothes", image: u("photo-1551028719-00167b16eac5"), rating: 4.8, description: "Vintage-wash denim jacket, true-to-size fit." },
-  { id: "p3", name: "Cozy Knit Hoodie", brand: "Loop", price: 59, oldPrice: 75, category: "clothes", image: u("photo-1556821840-3a63f95609a7"), rating: 4.5, description: "Soft brushed fleece hoodie for everyday wear." },
-  { id: "p4", name: "Linen Summer Shirt", brand: "Coast", price: 49, category: "clothes", image: u("photo-1602810318383-e386cc2a3ccf"), rating: 4.4, description: "Breathable linen for warm days." },
+  // CLOTHES
+  { id: "p1", name: "Oversized Graphic Tee", brand: "H&M", price: 1499, oldPrice: 2299, category: "clothes", image: u("photo-1521572163474-6864f9cf17ab"), rating: 4.6, description: "Heavyweight cotton oversized tee with bold print.", tag: "Bestseller" },
+  { id: "p2", name: "511 Slim Denim Jacket", brand: "Levi's", price: 5999, category: "clothes", image: u("photo-1551028719-00167b16eac5"), rating: 4.8, description: "Vintage-wash denim jacket, true-to-size fit." },
+  { id: "p3", name: "Tech Fleece Hoodie", brand: "Nike", price: 4499, oldPrice: 5999, category: "clothes", image: u("photo-1556821840-3a63f95609a7"), rating: 4.5, description: "Soft brushed fleece hoodie for everyday wear." },
+  { id: "p4", name: "Linen Summer Shirt", brand: "Zara", price: 2799, category: "clothes", image: u("photo-1602810318383-e386cc2a3ccf"), rating: 4.4, description: "Breathable linen for warm days." },
+  { id: "p17", name: "Essential Joggers", brand: "Adidas", price: 2999, category: "clothes", image: u("photo-1552902865-b72c031ac5ea"), rating: 4.5, description: "Tapered fleece joggers for all-day wear." },
+  { id: "p18", name: "Puffer Vest", brand: "Uniqlo", price: 3999, oldPrice: 4999, category: "clothes", image: u("photo-1591047139829-d91aecb6caea"), rating: 4.6, description: "Ultralight insulated vest for layering." },
+  { id: "p19", name: "Classic Polo", brand: "Puma", price: 1999, category: "clothes", image: u("photo-1586790170083-2f9ceadc732d"), rating: 4.3, description: "Pique cotton polo with modern fit." },
+  { id: "p20", name: "Cargo Wide Pants", brand: "Bershka", price: 2599, category: "clothes", image: u("photo-1473966968600-fa801b869a1a"), rating: 4.4, description: "Utility cargo with a relaxed silhouette." },
 
-  { id: "p5", name: "Aurora Pro 15", brand: "Nova", price: 899, oldPrice: 1099, category: "mobiles", image: u("photo-1511707171634-5f897ff02aa9"), rating: 4.9, description: "6.7\" OLED, triple camera, all-day battery.", tag: "New" },
-  { id: "p6", name: "Pulse Lite 5G", brand: "Nova", price: 349, category: "mobiles", image: u("photo-1592750475338-74b7b21085ab"), rating: 4.3, description: "Snappy 5G performance under $400." },
-  { id: "p7", name: "Orbit Fold", brand: "Helix", price: 1299, category: "mobiles", image: u("photo-1598327105666-5b89351aff97"), rating: 4.7, description: "Foldable display, pro-grade cameras." },
+  // MOBILES
+  { id: "p5", name: "iPhone 15 Pro", brand: "Apple", price: 134900, oldPrice: 144900, category: "mobiles", image: u("photo-1511707171634-5f897ff02aa9"), rating: 4.9, description: "Titanium build, A17 Pro chip, 6.1\" ProMotion display.", tag: "New" },
+  { id: "p6", name: "Galaxy S24 Ultra", brand: "Samsung", price: 129999, category: "mobiles", image: u("photo-1592750475338-74b7b21085ab"), rating: 4.8, description: "200MP camera, Snapdragon 8 Gen 3, S Pen." },
+  { id: "p7", name: "Pixel 8 Pro", brand: "Google", price: 106999, category: "mobiles", image: u("photo-1598327105666-5b89351aff97"), rating: 4.7, description: "Tensor G3 with the best computational photography." },
+  { id: "p21", name: "OnePlus 12", brand: "OnePlus", price: 64999, oldPrice: 69999, category: "mobiles", image: u("photo-1567581935884-3349723552ca"), rating: 4.6, description: "Hasselblad cameras, 100W fast charging." },
+  { id: "p22", name: "Redmi Note 13 Pro+", brand: "Xiaomi", price: 31999, category: "mobiles", image: u("photo-1574944985070-8f3ebc6b79d2"), rating: 4.4, description: "200MP camera, AMOLED 120Hz display." },
+  { id: "p23", name: "Realme GT 5 Pro", brand: "Realme", price: 49999, category: "mobiles", image: u("photo-1601784551446-20c9e07cdbdb"), rating: 4.5, description: "Snapdragon 8 Gen 3 flagship killer." },
 
-  { id: "p8", name: "Slate Tab 11", brand: "Aero", price: 499, oldPrice: 599, category: "tablets", image: u("photo-1561154464-82e9adf32764"), rating: 4.6, description: "11\" laminated display with pencil support.", tag: "Student pick" },
-  { id: "p9", name: "Canvas Tab Mini", brand: "Aero", price: 299, category: "tablets", image: u("photo-1585789575207-9e7e4cca8d96"), rating: 4.4, description: "Compact tablet perfect for reading & notes." },
+  // TABLETS
+  { id: "p8", name: "iPad Air M2", brand: "Apple", price: 59900, oldPrice: 64900, category: "tablets", image: u("photo-1561154464-82e9adf32764"), rating: 4.8, description: "11\" Liquid Retina with Apple Pencil Pro support.", tag: "Student pick" },
+  { id: "p9", name: "Galaxy Tab S9 FE", brand: "Samsung", price: 36999, category: "tablets", image: u("photo-1585789575207-9e7e4cca8d96"), rating: 4.5, description: "10.9\" LCD, S Pen included, water resistant." },
+  { id: "p24", name: "Surface Pro 9", brand: "Microsoft", price: 109999, category: "tablets", image: u("photo-1623126908029-58cb08a2b272"), rating: 4.6, description: "2-in-1 tablet with detachable keyboard." },
+  { id: "p25", name: "MatePad 11.5", brand: "Huawei", price: 27999, category: "tablets", image: u("photo-1632634571273-e35eb2543d33"), rating: 4.3, description: "120Hz display with M-Pencil bundled." },
 
-  { id: "p10", name: "AirBook 14", brand: "Lumen", price: 1199, oldPrice: 1399, category: "laptops", image: u("photo-1496181133206-80ce9b88a853"), rating: 4.9, description: "Featherlight laptop with 18-hour battery.", tag: "Hot" },
-  { id: "p11", name: "Studio Pro 16", brand: "Lumen", price: 1899, category: "laptops", image: u("photo-1517336714731-489689fd1ca8"), rating: 4.8, description: "Creator-grade display & GPU performance." },
-  { id: "p12", name: "Flex 13 Convertible", brand: "Vertex", price: 749, category: "laptops", image: u("photo-1588872657578-7efd1f1555ed"), rating: 4.5, description: "2-in-1 design with touch & pen input." },
+  // LAPTOPS
+  { id: "p10", name: "MacBook Air 13 M3", brand: "Apple", price: 114900, oldPrice: 124900, category: "laptops", image: u("photo-1496181133206-80ce9b88a853"), rating: 4.9, description: "Featherlight laptop with 18-hour battery.", tag: "Hot" },
+  { id: "p11", name: "ROG Zephyrus G14", brand: "ASUS", price: 149990, category: "laptops", image: u("photo-1517336714731-489689fd1ca8"), rating: 4.8, description: "Creator-grade display & GPU performance." },
+  { id: "p12", name: "Yoga 7i 2-in-1", brand: "Lenovo", price: 79990, category: "laptops", image: u("photo-1588872657578-7efd1f1555ed"), rating: 4.5, description: "2-in-1 convertible with touch & pen input." },
+  { id: "p26", name: "XPS 13 Plus", brand: "Dell", price: 119990, category: "laptops", image: u("photo-1593642632559-0c6d3fc62b89"), rating: 4.6, description: "InfinityEdge OLED, 12th-gen Intel Core." },
+  { id: "p27", name: "Pavilion Aero 13", brand: "HP", price: 74999, oldPrice: 84999, category: "laptops", image: u("photo-1611186871348-b1ce696e52c9"), rating: 4.4, description: "Sub-1kg with Ryzen 7 and 16GB RAM." },
 
-  { id: "p13", name: "Wave Buds Pro", brand: "Sonik", price: 129, oldPrice: 169, category: "accessories", image: u("photo-1606220945770-b5b6c2c55bf1"), rating: 4.7, description: "Active noise cancelling earbuds, 30h battery." },
-  { id: "p14", name: "Orbit Over-Ear", brand: "Sonik", price: 199, category: "accessories", image: u("photo-1583394838336-acd977736f90"), rating: 4.8, description: "Studio-grade wireless headphones." },
-  { id: "p15", name: "Charge Pad Trio", brand: "Volt", price: 59, category: "accessories", image: u("photo-1583863788434-e58a36330cf0"), rating: 4.3, description: "3-in-1 wireless charging pad." },
-  { id: "p16", name: "Daily Backpack", brand: "Trail", price: 79, category: "accessories", image: u("photo-1553062407-98eeb64c6a62"), rating: 4.6, description: "Water-resistant 22L laptop backpack." },
+  // ACCESSORIES
+  { id: "p13", name: "AirPods Pro 2", brand: "Apple", price: 24900, oldPrice: 29900, category: "accessories", image: u("photo-1606220945770-b5b6c2c55bf1"), rating: 4.8, description: "Active noise cancelling earbuds, 30h battery." },
+  { id: "p14", name: "WH-1000XM5", brand: "Sony", price: 29990, category: "accessories", image: u("photo-1583394838336-acd977736f90"), rating: 4.9, description: "Industry-leading noise cancelling headphones." },
+  { id: "p15", name: "QC Ultra Headphones", brand: "Bose", price: 36900, category: "accessories", image: u("photo-1545127398-14699f92334b"), rating: 4.7, description: "Immersive spatial audio with QuietComfort tech." },
+  { id: "p16", name: "MX Master 3S", brand: "Logitech", price: 9495, category: "accessories", image: u("photo-1527814050087-3793815479db"), rating: 4.8, description: "Pro-grade wireless mouse for creators." },
+  { id: "p28", name: "Flip 6 Speaker", brand: "JBL", price: 11999, category: "accessories", image: u("photo-1608043152269-423dbba4e7e1"), rating: 4.5, description: "Portable waterproof Bluetooth speaker." },
+  { id: "p29", name: "Charge Pad Trio", brand: "Anker", price: 4999, category: "accessories", image: u("photo-1583863788434-e58a36330cf0"), rating: 4.3, description: "3-in-1 wireless charging pad." },
+
+  // COLLEGE
+  { id: "c1", name: "Memory Foam Pillow Set", brand: "Sleepyhead", price: 1799, oldPrice: 2499, category: "college", image: u("photo-1631049307264-da0ec9d70304"), rating: 4.6, description: "Pack of 2 cooling-gel pillows for hostel beds.", tag: "Hostel pick" },
+  { id: "c2", name: "Mini Electric Kettle 0.6L", brand: "Pigeon", price: 899, category: "college", image: u("photo-1517677208171-0bc6725a3e60"), rating: 4.5, description: "Compact kettle — perfect for instant noodles." },
+  { id: "c3", name: "Study Desk Lamp", brand: "Philips", price: 1299, category: "college", image: u("photo-1565374790085-37dcd99c0a8c"), rating: 4.7, description: "LED dimmable lamp with USB charging port." },
+  { id: "c4", name: "Stackable Storage Bins", brand: "Ikea", price: 1499, category: "college", image: u("photo-1558997519-83ea9252edf8"), rating: 4.4, description: "Set of 3 collapsible hostel storage boxes." },
+  { id: "c5", name: "Laptop Backpack 25L", brand: "American Tourister", price: 1999, oldPrice: 2999, category: "college", image: u("photo-1553062407-98eeb64c6a62"), rating: 4.6, description: "Water-resistant backpack with USB charging port." },
+  { id: "c6", name: "Insulated Water Bottle 1L", brand: "Milton", price: 599, category: "college", image: u("photo-1602143407151-7111542de6e8"), rating: 4.5, description: "24h cold / 12h hot stainless bottle." },
+  { id: "c7", name: "Foldable Cloth Hangers x10", brand: "Kuber", price: 349, category: "college", image: u("photo-1558997519-83ea9252edf8"), rating: 4.2, description: "Space-saving anti-skid hangers for hostel wardrobes." },
+  { id: "c8", name: "Bluetooth Study Earphones", brand: "boAt", price: 1199, category: "college", image: u("photo-1572569511254-d8f925fe2cbb"), rating: 4.3, description: "40h battery, perfect for online lectures." },
+  { id: "c9", name: "Bedsheet + Pillow Combo", brand: "Bombay Dyeing", price: 1299, category: "college", image: u("photo-1505693416388-ac5ce068fe85"), rating: 4.4, description: "Single bed cotton set sized for hostel mattresses." },
+  { id: "c10", name: "Mini Iron Travel", brand: "Bajaj", price: 749, category: "college", image: u("photo-1545173168-9f1947eebb7f"), rating: 4.2, description: "Compact dry iron, fits in any drawer." },
+  { id: "c11", name: "Extension Board 4-Socket", brand: "Goldmedal", price: 549, category: "college", image: u("photo-1558002038-1055907df827"), rating: 4.6, description: "Surge-protected board with 2m cord." },
+  { id: "c12", name: "Notebook Bundle (6)", brand: "Classmate", price: 449, category: "college", image: u("photo-1517842645767-c639042777db"), rating: 4.7, description: "200-page ruled notebooks — semester-ready." },
 ];
 
 export const getProduct = (id: string) => products.find((p) => p.id === id);

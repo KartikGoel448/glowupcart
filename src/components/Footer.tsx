@@ -20,7 +20,7 @@ export function Footer() {
         <div>
           <h4 className="text-[11px] tracking-brand uppercase font-semibold mb-4">Shop</h4>
           <ul className="space-y-2.5 text-sm">
-            <li>Clothes</li><li>Mobiles</li><li>Tablets</li><li>Laptops</li><li>Accessories</li>
+            <li>Clothes</li><li>Mobiles</li><li>Tablets</li><li>Laptops</li><li>Accessories</li><li>College Essentials</li>
           </ul>
         </div>
         <div>
