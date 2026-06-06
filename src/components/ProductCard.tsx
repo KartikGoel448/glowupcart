@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { type Product } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
+import { inr } from "@/lib/format";
 import { toast } from "sonner";
 
 export function ProductCard({ product }: { product: Product }) {
@@ -42,9 +43,9 @@ export function ProductCard({ product }: { product: Product }) {
           </Link>
         </div>
         <div className="text-right whitespace-nowrap">
-          <p className="text-sm font-semibold">${product.price}</p>
+          <p className="text-sm font-semibold">{inr(product.price)}</p>
           {product.oldPrice && (
-            <p className="text-[11px] line-through text-muted-foreground">${product.oldPrice}</p>
+            <p className="text-[11px] line-through text-muted-foreground">{inr(product.oldPrice)}</p>
           )}
         </div>
       </div>

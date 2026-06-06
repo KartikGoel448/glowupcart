@@ -5,7 +5,7 @@ import { byCategory, categories, type Category } from "@/lib/products";
 import { ProductCard } from "@/components/ProductCard";
 
 const searchSchema = z.object({
-  category: z.enum(["all", "clothes", "mobiles", "tablets", "laptops", "accessories"]).catch("all"),
+  category: z.enum(["all", "clothes", "mobiles", "tablets", "laptops", "accessories", "college"]).catch("all"),
 });
 
 export const Route = createFileRoute("/products")({
