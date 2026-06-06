@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { categories, products } from "@/lib/products";
 import { ProductCard } from "@/components/ProductCard";
+import { BrandMarquee } from "@/components/BrandMarquee";
 
 export const Route = createFileRoute("/")({
   head: () => ({
