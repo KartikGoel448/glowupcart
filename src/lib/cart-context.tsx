@@ -22,8 +22,12 @@ interface CartState {
   detailedLines: { product: Product; qty: number; lineTotal: number }[];
 }
 
-const STUDENT_CODE = "STUDENT15";
-const STUDENT_RATE = 0.15;
+export const PROMO_CODES: Record<string, { rate: number; label: string; min?: number }> = {
+  STUDENT15: { rate: 0.15, label: "15% off — Students" },
+  NEWUSER10: { rate: 0.10, label: "10% off — First order" },
+  FESTIVE20: { rate: 0.20, label: "20% off — Festive sale", min: 5000 },
+  COLLEGE25: { rate: 0.25, label: "25% off — College kit", min: 2500 },
+};
 
 const CartCtx = createContext<CartState | null>(null);
 
@@ -75,17 +79,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
       .filter(Boolean) as { product: Product; qty: number; lineTotal: number }[];
 
     const subtotal = detailedLines.reduce((s, l) => s + l.lineTotal, 0);
-    const discount = promo === STUDENT_CODE ? +(subtotal * STUDENT_RATE).toFixed(2) : 0;
+    const activePromo = promo && PROMO_CODES[promo] ? PROMO_CODES[promo] : null;
+    const discount = activePromo && subtotal >= (activePromo.min ?? 0)
+      ? +(subtotal * activePromo.rate).toFixed(2)
+      : 0;
     const total = +(subtotal - discount).toFixed(2);
     const itemCount = lines.reduce((s, l) => s + l.qty, 0);
 
     const applyPromo = (code: string) => {
       const c = code.trim().toUpperCase();
-      if (c === STUDENT_CODE) {
-        setPromo(c);
-        return { ok: true, message: "Student discount applied — 15% off!" };
+      const p = PROMO_CODES[c];
+      if (!p) return { ok: false, message: "Invalid code. Try STUDENT15, NEWUSER10, FESTIVE20 or COLLEGE25." };
+      if (p.min && subtotal < p.min) {
+        return { ok: false, message: `Add ${`₹${(p.min - subtotal).toLocaleString("en-IN")}`} more to use ${c}.` };
       }
-      return { ok: false, message: "Invalid code. Try STUDENT15 for 15% off." };
+      setPromo(c);
+      return { ok: true, message: `${c} applied — ${p.label}!` };
     };
     const clearPromo = () => setPromo(null);
 

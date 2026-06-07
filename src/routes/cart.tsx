@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Trash2, Plus, Minus, ShoppingBag, Tag, X, CheckCircle2 } from "lucide-react";
-import { useCart } from "@/lib/cart-context";
+import { useCart, PROMO_CODES } from "@/lib/cart-context";
 import { inr } from "@/lib/format";
 import { toast } from "sonner";
 
@@ -89,9 +89,9 @@ function CartPage() {
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="font-semibold">{inr(subtotal)}</span>
               </div>
-              {discount > 0 && (
+              {discount > 0 && promo && (
                 <div className="flex justify-between text-primary">
-                  <span>Student discount (15%)</span>
+                  <span>{promo} — {PROMO_CODES[promo]?.label}</span>
                   <span className="font-semibold">−{inr(discount)}</span>
                 </div>
               )}
@@ -140,9 +140,20 @@ function CartPage() {
                   </button>
                 </form>
               )}
-              <p className="text-[11px] text-muted-foreground mt-2">
-                Students: try <button onClick={() => setCode("STUDENT15")} className="font-semibold text-primary hover:underline">STUDENT15</button> for 15% off.
-              </p>
+              <div className="mt-4 space-y-1.5">
+                <p className="text-[11px] tracking-brand uppercase text-muted-foreground font-semibold">Available coupons</p>
+                {Object.entries(PROMO_CODES).map(([c, p]) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setCode(c)}
+                    className="w-full flex items-center justify-between text-left px-3 py-2 rounded-lg border border-dashed border-border hover:border-foreground bg-background/50 text-xs transition"
+                  >
+                    <span className="font-bold tracking-brand">{c}</span>
+                    <span className="text-muted-foreground">{p.label}{p.min ? ` · min ${inr(p.min)}` : ""}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             <button
