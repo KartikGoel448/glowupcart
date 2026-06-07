@@ -39,10 +39,37 @@ export const Route = createFileRoute("/products/$id")({
   component: ProductDetail,
 });
 
+const colorPalette = [
+  { name: "Onyx", hex: "#1a1a1a" },
+  { name: "Cream", hex: "#f1ece1" },
+  { name: "Forest", hex: "#2d4a3a" },
+  { name: "Clay", hex: "#b86a4b" },
+  { name: "Sky", hex: "#7aa6d6" },
+];
+
+const sizesByCategory: Record<string, string[]> = {
+  clothes: ["XS", "S", "M", "L", "XL", "XXL"],
+  accessories: ["One size"],
+  mobiles: ["128 GB", "256 GB", "512 GB", "1 TB"],
+  tablets: ["64 GB", "128 GB", "256 GB", "512 GB"],
+  laptops: ["8 GB / 256 GB", "16 GB / 512 GB", "16 GB / 1 TB"],
+  college: ["Standard", "Large"],
+};
+
+const sampleReviews = [
+  { name: "Ananya P.", rating: 5, date: "2 weeks ago", text: "Exactly as described. Quality is unreal for the price." },
+  { name: "Vikram J.", rating: 5, date: "1 month ago", text: "Shipped in 2 days. Packaging was super premium. Definitely buying again." },
+  { name: "Sneha R.", rating: 4, date: "1 month ago", text: "Loved it overall — only wish there were more colour options at launch." },
+];
+
 function ProductDetail() {
   const { product } = Route.useLoaderData();
   const { add } = useCart();
   const [qty, setQty] = useState(1);
+  const sizes = sizesByCategory[product.category] ?? ["One size"];
+  const colors = colorPalette.slice(0, product.category === "clothes" ? 5 : 3);
+  const [color, setColor] = useState(colors[0].name);
+  const [size, setSize] = useState(sizes[0]);
   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
 
   return (
@@ -62,8 +89,10 @@ function ProductDetail() {
 
           <div className="mt-3 flex items-center gap-3 text-sm">
             <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 fill-current text-sun" />
-              <span className="font-semibold">{product.rating.toFixed(1)}</span>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className={"h-4 w-4 " + (i < Math.round(product.rating) ? "fill-foreground text-foreground" : "text-muted-foreground/30")} />
+              ))}
+              <span className="font-semibold ml-1">{product.rating.toFixed(1)}</span>
             </div>
             <span className="text-muted-foreground">· 240+ reviews</span>
           </div>
@@ -80,6 +109,52 @@ function ProductDetail() {
 
           <p className="mt-6 text-muted-foreground leading-relaxed">{product.description}</p>
 
+          {/* Colors */}
+          <div className="mt-8">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-[11px] tracking-brand uppercase font-semibold">Colour</p>
+              <p className="text-xs text-muted-foreground">{color}</p>
+            </div>
+            <div className="flex gap-3">
+              {colors.map((c) => (
+                <button
+                  key={c.name}
+                  onClick={() => setColor(c.name)}
+                  aria-label={c.name}
+                  className={
+                    "h-9 w-9 rounded-full border-2 transition " +
+                    (color === c.name ? "border-foreground scale-110" : "border-border hover:border-foreground/50")
+                  }
+                  style={{ backgroundColor: c.hex }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Sizes */}
+          <div className="mt-6">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-[11px] tracking-brand uppercase font-semibold">
+                {product.category === "clothes" ? "Size" : product.category === "mobiles" || product.category === "tablets" ? "Storage" : product.category === "laptops" ? "Configuration" : "Option"}
+              </p>
+              <button className="text-[11px] tracking-brand uppercase text-muted-foreground hover:text-foreground">Size guide</button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {sizes.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setSize(s)}
+                  className={
+                    "px-4 py-2 text-xs font-semibold border transition " +
+                    (size === s ? "border-foreground bg-foreground text-background" : "border-border hover:border-foreground")
+                  }
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="mt-6 inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-soft border border-border text-sm">
             🎓 Students: use <span className="font-bold text-primary">STUDENT15</span> at checkout for 15% off.
           </div>
@@ -93,7 +168,7 @@ function ProductDetail() {
             <button
               onClick={() => {
                 add(product.id, qty);
-                toast.success(`Added ${qty} × ${product.name}`);
+                toast.success(`Added ${qty} × ${product.name} (${color}, ${size})`);
               }}
               className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-hero text-primary-foreground font-semibold shadow-pop hover:opacity-95"
             >
@@ -115,6 +190,41 @@ function ProductDetail() {
           </div>
         </div>
       </div>
+
+      {/* Reviews */}
+      <section className="mt-20 border-t border-border pt-12">
+        <div className="flex items-end justify-between mb-8">
+          <div>
+            <p className="text-[11px] tracking-brand uppercase text-muted-foreground">Reviews</p>
+            <h2 className="font-serif text-3xl md:text-4xl mt-2">What buyers say</h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className={"h-4 w-4 " + (i < Math.round(product.rating) ? "fill-foreground text-foreground" : "text-muted-foreground/30")} />
+              ))}
+            </div>
+            <span className="text-sm font-semibold">{product.rating.toFixed(1)} / 5</span>
+          </div>
+        </div>
+        <div className="grid md:grid-cols-3 gap-5">
+          {sampleReviews.map((r) => (
+            <article key={r.name} className="border border-border p-6 bg-card">
+              <div className="flex gap-0.5 mb-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className={"h-3.5 w-3.5 " + (i < r.rating ? "fill-foreground text-foreground" : "text-muted-foreground/30")} />
+                ))}
+              </div>
+              <p className="font-serif text-base leading-snug">"{r.text}"</p>
+              <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
+                <p className="text-sm font-semibold">{r.name}</p>
+                <p className="text-[11px] tracking-brand uppercase text-muted-foreground">{r.date}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
 
       {related.length > 0 && (
         <section className="mt-20">
