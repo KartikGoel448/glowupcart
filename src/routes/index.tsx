@@ -4,6 +4,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { categories, products } from "@/lib/products";
 import { ProductCard } from "@/components/ProductCard";
 import { BrandMarquee } from "@/components/BrandMarquee";
+import { Reviews } from "@/components/Reviews";
 
 export const Route = createFileRoute("/")({
   head: () => ({
