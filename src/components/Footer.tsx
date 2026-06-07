@@ -1,4 +1,4 @@
-import { Instagram, Linkedin, Mail, Phone } from "lucide-react";
+import { Instagram, Linkedin, Mail } from "lucide-react";
 
 export function Footer() {
   return (
@@ -30,10 +30,6 @@ export function Footer() {
         <div>
           <h4 className="text-[11px] tracking-brand uppercase font-semibold mb-4 opacity-70">Contact</h4>
           <ul className="space-y-3 text-sm">
-            <li className="flex items-center gap-2.5">
-              <Phone className="h-4 w-4 opacity-70" />
-              <a href="tel:+919876543210" className="hover:underline">+91 98765 43210</a>
-            </li>
             <li className="flex items-center gap-2.5">
               <Mail className="h-4 w-4 opacity-70" />
               <a href="mailto:hello@glowcart.in" className="hover:underline">hello@glowcart.in</a>

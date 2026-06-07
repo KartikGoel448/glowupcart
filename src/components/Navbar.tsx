@@ -1,11 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { ShoppingBag, Search, User, Menu, X, ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart-context";
 
 export function Navbar() {
   const { itemCount } = useCart();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <header className="sticky top-0 z-40 bg-background border-b border-border">
@@ -48,7 +50,7 @@ export function Navbar() {
           <Link to="/cart" className="relative inline-flex items-center gap-1.5 hover:opacity-60">
             <ShoppingBag className="h-4 w-4" />
             <span className="hidden sm:inline">Cart</span>
-            {itemCount > 0 && (
+            {mounted && itemCount > 0 && (
               <span className="ml-0.5 inline-grid place-items-center min-w-[18px] h-[18px] px-1 rounded-full bg-foreground text-background text-[10px] font-bold">
                 {itemCount}
               </span>
