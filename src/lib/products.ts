@@ -13,7 +13,7 @@ export interface Product {
   tag?: string;
 }
 
-const u = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=80`;
+const u = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1400&q=90`;
 
 export const categories: { id: Category; label: string; emoji: string; blurb: string }[] = [
   { id: "clothes", label: "Clothes", emoji: "👕", blurb: "Streetwear & essentials" },
