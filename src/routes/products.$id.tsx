@@ -72,6 +72,13 @@ function ProductDetail() {
   const [size, setSize] = useState(sizes[0]);
   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
 
+  useEffect(() => {
+    setColor(colors[0].name);
+    setSize(sizes[0]);
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id]);
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <Link to="/products" search={{ category: "all" }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
