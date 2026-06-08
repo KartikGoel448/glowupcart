@@ -90,7 +90,18 @@ function ProductDetail() {
 
       <div className="mt-6 grid lg:grid-cols-2 gap-10">
         <div className="rounded-3xl overflow-hidden bg-secondary aspect-square shadow-card">
-          <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+          <img
+            src={product.image}
+            alt={product.name}
+            onError={(e) => {
+              const img = e.currentTarget;
+              if (!img.dataset.fallback) {
+                img.dataset.fallback = "1";
+                img.src = `https://picsum.photos/seed/${encodeURIComponent(product.id + product.name)}/1200/1200`;
+              }
+            }}
+            className="h-full w-full object-cover"
+          />
         </div>
 
         <div>

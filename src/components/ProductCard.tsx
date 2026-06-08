@@ -4,6 +4,9 @@ import { useCart } from "@/lib/cart-context";
 import { inr } from "@/lib/format";
 import { toast } from "sonner";
 
+const fallbackFor = (p: Product) =>
+  `https://picsum.photos/seed/${encodeURIComponent(p.id + p.name)}/800/1000`;
+
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
   return (
@@ -11,12 +14,20 @@ export function ProductCard({ product }: { product: Product }) {
       <Link
         to="/products/$id"
         params={{ id: product.id }}
+        preload={false}
         className="block relative aspect-[4/5] overflow-hidden bg-secondary"
       >
         <img
           src={product.image}
           alt={product.name}
           loading="lazy"
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (!img.dataset.fallback) {
+              img.dataset.fallback = "1";
+              img.src = fallbackFor(product);
+            }
+          }}
           className="h-full w-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
         />
         {product.tag && (
@@ -27,6 +38,7 @@ export function ProductCard({ product }: { product: Product }) {
         <button
           onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             add(product.id);
             toast.success(`${product.name} added`);
           }}
@@ -38,7 +50,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="mt-3 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[10px] tracking-brand uppercase text-muted-foreground">{product.brand}</p>
-          <Link to="/products/$id" params={{ id: product.id }}>
+          <Link to="/products/$id" params={{ id: product.id }} preload={false}>
             <h3 className="text-sm font-medium mt-1 hover:underline underline-offset-4 line-clamp-1">{product.name}</h3>
           </Link>
         </div>
