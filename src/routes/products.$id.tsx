@@ -29,13 +29,16 @@ export const Route = createFileRoute("/products/$id")({
       <Link to="/products" search={{ category: "all" }} className="inline-block mt-4 text-primary font-semibold">← Back to shop</Link>
     </div>
   ),
-  errorComponent: ({ error, reset }) => (
-    <div className="mx-auto max-w-3xl px-4 py-24 text-center">
-      <h1 className="text-xl font-bold">Something went wrong</h1>
-      <p className="text-muted-foreground text-sm mt-2">{error.message}</p>
-      <button onClick={reset} className="mt-4 px-4 py-2 rounded-lg bg-primary text-primary-foreground">Retry</button>
-    </div>
-  ),
+  errorComponent: ({ error, reset }) => {
+    console.error(error);
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-24 text-center">
+        <h1 className="text-xl font-bold">Something went wrong</h1>
+        <p className="text-muted-foreground text-sm mt-2">We couldn't load this product. Please try again.</p>
+        <button onClick={reset} className="mt-4 px-4 py-2 rounded-lg bg-primary text-primary-foreground">Retry</button>
+      </div>
+    );
+  },
   component: ProductDetail,
 });
 
