@@ -125,12 +125,14 @@ function ProductDetail() {
             <div className="flex gap-3">
               {colors.map((c) => (
                 <button
+                  type="button"
                   key={c.name}
                   onClick={() => setColor(c.name)}
                   aria-label={c.name}
+                  aria-pressed={color === c.name}
                   className={
                     "h-9 w-9 rounded-full border-2 transition " +
-                    (color === c.name ? "border-foreground scale-110" : "border-border hover:border-foreground/50")
+                    (color === c.name ? "border-foreground scale-110 ring-2 ring-offset-2 ring-foreground/20" : "border-border hover:border-foreground/50")
                   }
                   style={{ backgroundColor: c.hex }}
                 />
