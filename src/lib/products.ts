@@ -63,12 +63,12 @@ export const products: Product[] = [
   { id: "p35", name: "MacBook Pro 14 M3 Pro", brand: "Apple", price: 199900, category: "laptops", image: u("photo-1517336714731-489689fd1ca8"), rating: 4.9, description: "Liquid Retina XDR, M3 Pro performance." },
 
   // ACCESSORIES
-  { id: "p13", name: "AirPods Pro 2", brand: "Apple", price: 24900, oldPrice: 29900, category: "accessories", image: u("photo-1606220945770-b5b6c2c55bf1"), rating: 4.8, description: "Active noise cancelling earbuds, 30h battery." },
-  { id: "p14", name: "WH-1000XM5", brand: "Sony", price: 29990, category: "accessories", image: u("photo-1583394838336-acd977736f90"), rating: 4.9, description: "Industry-leading noise cancelling headphones." },
+  { id: "p13", name: "AirPods Pro 2", brand: "Apple", price: 24900, oldPrice: 29900, category: "accessories", image: u("photo-1572569511254-d8f925fe2cbb"), rating: 4.8, description: "Active noise cancelling earbuds, 30h battery." },
+  { id: "p14", name: "WH-1000XM5", brand: "Sony", price: 29990, category: "accessories", image: u("photo-1618366712010-f4ae9c647dcb"), rating: 4.9, description: "Industry-leading noise cancelling headphones." },
   { id: "p15", name: "QC Ultra Headphones", brand: "Bose", price: 36900, category: "accessories", image: u("photo-1545127398-14699f92334b"), rating: 4.7, description: "Immersive spatial audio with QuietComfort tech." },
   { id: "p16", name: "MX Master 3S", brand: "Logitech", price: 9495, category: "accessories", image: u("photo-1527864550417-7fd91fc51a46"), rating: 4.8, description: "Pro-grade wireless mouse for creators." },
   { id: "p28", name: "Flip 6 Speaker", brand: "JBL", price: 11999, category: "accessories", image: u("photo-1608043152269-423dbba4e7e1"), rating: 4.5, description: "Portable waterproof Bluetooth speaker." },
-  { id: "p29", name: "Charge Pad Trio", brand: "Anker", price: 4999, category: "accessories", image: u("photo-1633265486064-086b219458ec"), rating: 4.3, description: "3-in-1 wireless charging pad." },
+  { id: "p29", name: "Charge Pad Trio", brand: "Anker", price: 4999, category: "accessories", image: u("photo-1583863788434-e58a36330cf0"), rating: 4.3, description: "3-in-1 wireless charging pad." },
   { id: "p36", name: "Apple Watch Series 9", brand: "Apple", price: 45900, oldPrice: 49900, category: "accessories", image: u("photo-1551816230-ef5deaed4a26"), rating: 4.8, description: "Always-on Retina, double-tap gesture.", tag: "Sale" },
   { id: "p37", name: "Mechanical Keyboard K2", brand: "Keychron", price: 8499, category: "accessories", image: u("photo-1587829741301-dc798b83add3"), rating: 4.7, description: "Hot-swappable 75% wireless mechanical." },
 
