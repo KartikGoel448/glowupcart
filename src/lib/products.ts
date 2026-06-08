@@ -13,7 +13,7 @@ export interface Product {
   tag?: string;
 }
 
-const u = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=80`;
+const u = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1400&q=90`;
 
 export const categories: { id: Category; label: string; emoji: string; blurb: string }[] = [
   { id: "clothes", label: "Clothes", emoji: "👕", blurb: "Streetwear & essentials" },
@@ -39,36 +39,36 @@ export const products: Product[] = [
   { id: "p32", name: "Cropped Trucker Jacket", brand: "Tommy Hilfiger", price: 4499, category: "clothes", image: u("photo-1591047139756-eaa1cff1c1e6"), rating: 4.5, description: "Mid-wash cropped trucker with chest pockets." },
 
   // MOBILES
-  { id: "p5", name: "iPhone 15 Pro", brand: "Apple", price: 134900, oldPrice: 144900, category: "mobiles", image: u("photo-1696446702183-be9bc138e8be"), rating: 4.9, description: "Titanium build, A17 Pro chip, 6.1\" ProMotion display.", tag: "New" },
-  { id: "p6", name: "Galaxy S24 Ultra", brand: "Samsung", price: 129999, category: "mobiles", image: u("photo-1707412512904-bdcdcf6c1a05"), rating: 4.8, description: "200MP camera, Snapdragon 8 Gen 3, S Pen." },
+  { id: "p5", name: "iPhone 15 Pro", brand: "Apple", price: 134900, oldPrice: 144900, category: "mobiles", image: u("photo-1695048133142-1a20484d2569"), rating: 4.9, description: "Titanium build, A17 Pro chip, 6.1\" ProMotion display.", tag: "New" },
+  { id: "p6", name: "Galaxy S24 Ultra", brand: "Samsung", price: 129999, category: "mobiles", image: u("photo-1610945265064-0e34e5519bbf"), rating: 4.8, description: "200MP camera, Snapdragon 8 Gen 3, S Pen." },
   { id: "p7", name: "Pixel 8 Pro", brand: "Google", price: 106999, category: "mobiles", image: u("photo-1696446700082-2b22862c4d2c"), rating: 4.7, description: "Tensor G3 with the best computational photography." },
-  { id: "p21", name: "OnePlus 12", brand: "OnePlus", price: 64999, oldPrice: 69999, category: "mobiles", image: u("photo-1598327105666-5b89351aff97"), rating: 4.6, description: "Hasselblad cameras, 100W fast charging.", tag: "Sale" },
-  { id: "p22", name: "Redmi Note 13 Pro+", brand: "Xiaomi", price: 31999, category: "mobiles", image: u("photo-1607936854279-55e8a4c64888"), rating: 4.4, description: "200MP camera, AMOLED 120Hz display." },
+  { id: "p21", name: "OnePlus 12", brand: "OnePlus", price: 64999, oldPrice: 69999, category: "mobiles", image: u("photo-1511707171634-5f897ff02aa9"), rating: 4.6, description: "Hasselblad cameras, 100W fast charging.", tag: "Sale" },
+  { id: "p22", name: "Redmi Note 13 Pro+", brand: "Xiaomi", price: 31999, category: "mobiles", image: u("photo-1574944985070-8f3ebc6b79d2"), rating: 4.4, description: "200MP camera, AMOLED 120Hz display." },
   { id: "p23", name: "Realme GT 5 Pro", brand: "Realme", price: 49999, category: "mobiles", image: u("photo-1592899677977-9c10ca588bbd"), rating: 4.5, description: "Snapdragon 8 Gen 3 flagship killer." },
   { id: "p33", name: "Nothing Phone (2)", brand: "Nothing", price: 44999, oldPrice: 49999, category: "mobiles", image: u("photo-1685531935389-cc1edb1c8e02"), rating: 4.6, description: "Glyph interface, Snapdragon 8+ Gen 1.", tag: "Hot" },
 
   // TABLETS
   { id: "p8", name: "iPad Air M2", brand: "Apple", price: 59900, oldPrice: 64900, category: "tablets", image: u("photo-1561154464-82e9adf32764"), rating: 4.8, description: "11\" Liquid Retina with Apple Pencil Pro support.", tag: "Student pick" },
-  { id: "p9", name: "Galaxy Tab S9 FE", brand: "Samsung", price: 36999, category: "tablets", image: u("photo-1585789575207-9e7e4cca8d96"), rating: 4.5, description: "10.9\" LCD, S Pen included, water resistant." },
+  { id: "p9", name: "Galaxy Tab S9 FE", brand: "Samsung", price: 36999, category: "tablets", image: u("photo-1542751110-97427bbecf20"), rating: 4.5, description: "10.9\" LCD, S Pen included, water resistant." },
   { id: "p24", name: "Surface Pro 9", brand: "Microsoft", price: 109999, category: "tablets", image: u("photo-1623126908029-58cb08a2b272"), rating: 4.6, description: "2-in-1 tablet with detachable keyboard." },
   { id: "p25", name: "MatePad 11.5", brand: "Huawei", price: 27999, category: "tablets", image: u("photo-1632634571273-e35eb2543d33"), rating: 4.3, description: "120Hz display with M-Pencil bundled." },
   { id: "p34", name: "iPad mini 6", brand: "Apple", price: 49900, category: "tablets", image: u("photo-1544244015-0df4b3ffc6b0"), rating: 4.7, description: "8.3\" Liquid Retina, A15 Bionic — pocketable power." },
 
   // LAPTOPS
-  { id: "p10", name: "MacBook Air 13 M3", brand: "Apple", price: 114900, oldPrice: 124900, category: "laptops", image: u("photo-1517336714731-489689fd1ca8"), rating: 4.9, description: "Featherlight laptop with 18-hour battery.", tag: "Hot" },
-  { id: "p11", name: "ROG Zephyrus G14", brand: "ASUS", price: 149990, category: "laptops", image: u("photo-1593642632559-0c6d3fc62b89"), rating: 4.8, description: "Creator-grade display & GPU performance." },
+  { id: "p10", name: "MacBook Air 13 M3", brand: "Apple", price: 114900, oldPrice: 124900, category: "laptops", image: u("photo-1541807084-5c52b6b3adef"), rating: 4.9, description: "Featherlight laptop with 18-hour battery.", tag: "Hot" },
+  { id: "p11", name: "ROG Zephyrus G14", brand: "ASUS", price: 149990, category: "laptops", image: u("photo-1603302576837-37561b2e2302"), rating: 4.8, description: "Creator-grade display & GPU performance." },
   { id: "p12", name: "Yoga 7i 2-in-1", brand: "Lenovo", price: 79990, category: "laptops", image: u("photo-1588872657578-7efd1f1555ed"), rating: 4.5, description: "2-in-1 convertible with touch & pen input." },
   { id: "p26", name: "XPS 13 Plus", brand: "Dell", price: 119990, category: "laptops", image: u("photo-1496181133206-80ce9b88a853"), rating: 4.6, description: "InfinityEdge OLED, 12th-gen Intel Core." },
   { id: "p27", name: "Pavilion Aero 13", brand: "HP", price: 74999, oldPrice: 84999, category: "laptops", image: u("photo-1611186871348-b1ce696e52c9"), rating: 4.4, description: "Sub-1kg with Ryzen 7 and 16GB RAM.", tag: "Sale" },
-  { id: "p35", name: "MacBook Pro 14 M3 Pro", brand: "Apple", price: 199900, category: "laptops", image: u("photo-1611186871348-b1ce696e52c9"), rating: 4.9, description: "Liquid Retina XDR, M3 Pro performance." },
+  { id: "p35", name: "MacBook Pro 14 M3 Pro", brand: "Apple", price: 199900, category: "laptops", image: u("photo-1517336714731-489689fd1ca8"), rating: 4.9, description: "Liquid Retina XDR, M3 Pro performance." },
 
   // ACCESSORIES
-  { id: "p13", name: "AirPods Pro 2", brand: "Apple", price: 24900, oldPrice: 29900, category: "accessories", image: u("photo-1606220945770-b5b6c2c55bf1"), rating: 4.8, description: "Active noise cancelling earbuds, 30h battery." },
-  { id: "p14", name: "WH-1000XM5", brand: "Sony", price: 29990, category: "accessories", image: u("photo-1583394838336-acd977736f90"), rating: 4.9, description: "Industry-leading noise cancelling headphones." },
+  { id: "p13", name: "AirPods Pro 2", brand: "Apple", price: 24900, oldPrice: 29900, category: "accessories", image: u("photo-1572569511254-d8f925fe2cbb"), rating: 4.8, description: "Active noise cancelling earbuds, 30h battery." },
+  { id: "p14", name: "WH-1000XM5", brand: "Sony", price: 29990, category: "accessories", image: u("photo-1618366712010-f4ae9c647dcb"), rating: 4.9, description: "Industry-leading noise cancelling headphones." },
   { id: "p15", name: "QC Ultra Headphones", brand: "Bose", price: 36900, category: "accessories", image: u("photo-1545127398-14699f92334b"), rating: 4.7, description: "Immersive spatial audio with QuietComfort tech." },
   { id: "p16", name: "MX Master 3S", brand: "Logitech", price: 9495, category: "accessories", image: u("photo-1527864550417-7fd91fc51a46"), rating: 4.8, description: "Pro-grade wireless mouse for creators." },
   { id: "p28", name: "Flip 6 Speaker", brand: "JBL", price: 11999, category: "accessories", image: u("photo-1608043152269-423dbba4e7e1"), rating: 4.5, description: "Portable waterproof Bluetooth speaker." },
-  { id: "p29", name: "Charge Pad Trio", brand: "Anker", price: 4999, category: "accessories", image: u("photo-1633265486064-086b219458ec"), rating: 4.3, description: "3-in-1 wireless charging pad." },
+  { id: "p29", name: "Charge Pad Trio", brand: "Anker", price: 4999, category: "accessories", image: u("photo-1583863788434-e58a36330cf0"), rating: 4.3, description: "3-in-1 wireless charging pad." },
   { id: "p36", name: "Apple Watch Series 9", brand: "Apple", price: 45900, oldPrice: 49900, category: "accessories", image: u("photo-1551816230-ef5deaed4a26"), rating: 4.8, description: "Always-on Retina, double-tap gesture.", tag: "Sale" },
   { id: "p37", name: "Mechanical Keyboard K2", brand: "Keychron", price: 8499, category: "accessories", image: u("photo-1587829741301-dc798b83add3"), rating: 4.7, description: "Hot-swappable 75% wireless mechanical." },
 

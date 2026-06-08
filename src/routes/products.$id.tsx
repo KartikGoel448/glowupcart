@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Star, ShoppingBag, ArrowLeft, Truck, ShieldCheck, RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getProduct, products } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
 import { inr } from "@/lib/format";
@@ -72,6 +72,13 @@ function ProductDetail() {
   const [size, setSize] = useState(sizes[0]);
   const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
 
+  useEffect(() => {
+    setColor(colors[0].name);
+    setSize(sizes[0]);
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id]);
+
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       <Link to="/products" search={{ category: "all" }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
@@ -118,12 +125,14 @@ function ProductDetail() {
             <div className="flex gap-3">
               {colors.map((c) => (
                 <button
+                  type="button"
                   key={c.name}
                   onClick={() => setColor(c.name)}
                   aria-label={c.name}
+                  aria-pressed={color === c.name}
                   className={
                     "h-9 w-9 rounded-full border-2 transition " +
-                    (color === c.name ? "border-foreground scale-110" : "border-border hover:border-foreground/50")
+                    (color === c.name ? "border-foreground scale-110 ring-2 ring-offset-2 ring-foreground/20" : "border-border hover:border-foreground/50")
                   }
                   style={{ backgroundColor: c.hex }}
                 />
@@ -142,10 +151,12 @@ function ProductDetail() {
             <div className="flex flex-wrap gap-2">
               {sizes.map((s) => (
                 <button
+                  type="button"
                   key={s}
                   onClick={() => setSize(s)}
+                  aria-pressed={size === s}
                   className={
-                    "px-4 py-2 text-xs font-semibold border transition " +
+                    "px-4 py-2 text-xs font-semibold border transition rounded-md " +
                     (size === s ? "border-foreground bg-foreground text-background" : "border-border hover:border-foreground")
                   }
                 >
