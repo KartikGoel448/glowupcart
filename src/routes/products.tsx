@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
-import { useState } from "react";
-import { byCategory, categories, type Category } from "@/lib/products";
+import { useMemo, useState } from "react";
+import { byCategory, categories, products, type Category } from "@/lib/products";
 import { ProductCard } from "@/components/ProductCard";
 
 const searchSchema = z.object({
   category: z.enum(["all", "clothes", "mobiles", "tablets", "laptops", "accessories", "college"]).catch("all"),
+  brand: z.string().optional().catch(undefined),
 });
 
 export const Route = createFileRoute("/products")({
@@ -20,11 +21,17 @@ export const Route = createFileRoute("/products")({
 });
 
 function ProductsPage() {
-  const { category } = Route.useSearch();
+  const { category, brand } = Route.useSearch();
   const navigate = Route.useNavigate();
   const [sort, setSort] = useState<"featured" | "price-asc" | "price-desc" | "rating">("featured");
 
-  let list = byCategory(category as Category | "all");
+  const baseList = byCategory(category as Category | "all");
+  const brandsInCategory = useMemo(() => {
+    const set = new Set(baseList.map((p) => p.brand));
+    return Array.from(set).sort();
+  }, [baseList]);
+
+  let list = brand ? baseList.filter((p) => p.brand === brand) : baseList;
   if (sort === "price-asc") list = [...list].sort((a, b) => a.price - b.price);
   if (sort === "price-desc") list = [...list].sort((a, b) => b.price - a.price);
   if (sort === "rating") list = [...list].sort((a, b) => b.rating - a.rating);
@@ -40,6 +47,7 @@ function ProductsPage() {
         <div>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
             {category === "all" ? "All products" : categories.find((c) => c.id === category)?.label}
+            {brand && <span className="text-muted-foreground font-medium"> · {brand}</span>}
           </h1>
           <p className="text-muted-foreground mt-1">{list.length} items</p>
         </div>
@@ -50,7 +58,7 @@ function ProductsPage() {
             return (
               <button
                 key={c.id}
-                onClick={() => navigate({ search: { category: c.id } })}
+                onClick={() => navigate({ search: { category: c.id, brand: undefined } })}
                 className={
                   "px-4 py-2 rounded-full text-sm font-semibold border transition " +
                   (active
@@ -76,15 +84,51 @@ function ProductsPage() {
           </div>
         </div>
 
+        {brandsInCategory.length > 1 && (
+          <div className="flex flex-wrap items-center gap-2 -mt-2">
+            <span className="text-[11px] tracking-brand uppercase text-muted-foreground mr-1">Brand</span>
+            <button
+              onClick={() => navigate({ search: { category, brand: undefined } })}
+              className={
+                "px-3 py-1.5 rounded-full text-xs font-semibold border transition " +
+                (!brand ? "bg-foreground text-background border-foreground" : "bg-card border-border hover:border-foreground")
+              }
+            >
+              All brands
+            </button>
+            {brandsInCategory.map((b) => {
+              const active = brand === b;
+              return (
+                <button
+                  key={b}
+                  onClick={() => navigate({ search: { category, brand: b } })}
+                  className={
+                    "px-3 py-1.5 rounded-full text-xs font-semibold border transition " +
+                    (active ? "bg-foreground text-background border-foreground" : "bg-card border-border hover:border-foreground")
+                  }
+                >
+                  {b}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {list.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">
-            No products yet. <Link to="/products" search={{ category: "all" }} className="text-primary font-semibold">View all</Link>
+            No products match this filter.{" "}
+            <Link to="/products" search={{ category: "all", brand: undefined }} className="text-primary font-semibold">View all</Link>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {list.map((p) => <ProductCard key={p.id} product={p} />)}
           </div>
         )}
+
+        {/* Reassurance footer */}
+        <p className="text-center text-xs text-muted-foreground mt-6">
+          {products.length} curated products · Free shipping over ₹999 · 30-day returns
+        </p>
       </div>
     </div>
   );
