@@ -151,10 +151,12 @@ function ProductDetail() {
             <div className="flex flex-wrap gap-2">
               {sizes.map((s) => (
                 <button
+                  type="button"
                   key={s}
                   onClick={() => setSize(s)}
+                  aria-pressed={size === s}
                   className={
-                    "px-4 py-2 text-xs font-semibold border transition " +
+                    "px-4 py-2 text-xs font-semibold border transition rounded-md " +
                     (size === s ? "border-foreground bg-foreground text-background" : "border-border hover:border-foreground")
                   }
                 >
