@@ -7,7 +7,7 @@ import { inr } from "@/lib/format";
 import { ProductCard } from "@/components/ProductCard";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/products/$id")({
+export const Route = createFileRoute("/products_/$id")({
   loader: ({ params }) => {
     const product = getProduct(params.id);
     if (!product) throw notFound();
