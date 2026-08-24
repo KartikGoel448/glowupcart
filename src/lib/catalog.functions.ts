@@ -1,4 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { fetchCatalog } from "./catalog.server";
 
-export const getCatalog = createServerFn({ method: "GET" }).handler(async () => fetchCatalog());
+export const getCatalog = createServerFn({ method: "GET" }).handler(async () => {
+  const { fetchCatalog } = await import("./catalog.server");
+  return fetchCatalog();
+});
