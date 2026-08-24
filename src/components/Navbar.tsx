@@ -2,12 +2,14 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { ShoppingBag, Search, User, Menu, X, ArrowRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useCart } from "@/lib/cart-context";
-import { products } from "@/lib/products";
+import { useQuery } from "@tanstack/react-query";
+import { catalogQueryOptions } from "@/lib/catalog";
 import { inr } from "@/lib/format";
 import { toast } from "sonner";
 
 export function Navbar() {
   const { itemCount } = useCart();
+  const { data: catalog } = useQuery(catalogQueryOptions);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -44,7 +46,7 @@ export function Navbar() {
   const results = useMemo(() => {
     const term = q.trim().toLowerCase();
     if (!term) return [];
-    return products
+    return (catalog ?? [])
       .filter(
         (p) =>
           p.name.toLowerCase().includes(term) ||
@@ -52,7 +54,7 @@ export function Navbar() {
           p.category.toLowerCase().includes(term),
       )
       .slice(0, 8);
-  }, [q]);
+  }, [q, catalog]);
 
   return (
     <header className="sticky top-0 z-40 bg-background border-b border-border">
@@ -164,7 +166,7 @@ export function Navbar() {
               ) : (
                 <ul className="divide-y divide-border">
                   {results.map((p) => (
-                    <li key={p.id}>
+                    <li key={p.slug}>
                       <button
                         onClick={() => {
                           setSearchOpen(false);
