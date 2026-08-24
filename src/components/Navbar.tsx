@@ -171,7 +171,7 @@ export function Navbar() {
                         onClick={() => {
                           setSearchOpen(false);
                           setQ("");
-                          navigate({ to: "/products/$id", params: { id: p.id } });
+                          navigate({ to: "/products/$slug", params: { slug: p.slug } });
                         }}
                         className="w-full flex items-center gap-3 p-3 hover:bg-secondary text-left"
                       >
