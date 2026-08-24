@@ -49,22 +49,22 @@ function CartPage() {
         <div className="lg:col-span-2 space-y-4">
           {detailedLines.map(({ product, qty, lineTotal }) => (
             <div key={product.id} className="flex gap-4 p-4 rounded-2xl bg-card border border-border shadow-card">
-              <Link to="/products/$id" params={{ id: product.id }} className="shrink-0">
+              <Link to="/products/$slug" params={{ slug: product.slug }} className="shrink-0">
                 <img src={product.image} alt={product.name} className="h-24 w-24 rounded-xl object-cover bg-secondary" />
               </Link>
               <div className="flex-1 min-w-0">
                 <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{product.brand}</p>
-                <Link to="/products/$id" params={{ id: product.id }}>
+                <Link to="/products/$slug" params={{ slug: product.slug }}>
                   <h3 className="font-semibold truncate hover:text-primary">{product.name}</h3>
                 </Link>
                 <p className="text-sm text-muted-foreground capitalize">{product.category}</p>
                 <div className="mt-3 flex items-center gap-3">
                   <div className="inline-flex items-center border border-border rounded-lg overflow-hidden">
-                    <button onClick={() => setQty(product.id, qty - 1)} className="px-2 py-1 hover:bg-secondary"><Minus className="h-3 w-3" /></button>
+                    <button onClick={() => setQty(product.slug, qty - 1)} className="px-2 py-1 hover:bg-secondary"><Minus className="h-3 w-3" /></button>
                     <span className="px-3 text-sm font-semibold">{qty}</span>
-                    <button onClick={() => setQty(product.id, qty + 1)} className="px-2 py-1 hover:bg-secondary"><Plus className="h-3 w-3" /></button>
+                    <button onClick={() => setQty(product.slug, qty + 1)} className="px-2 py-1 hover:bg-secondary"><Plus className="h-3 w-3" /></button>
                   </div>
-                  <button onClick={() => { remove(product.id); toast(`Removed ${product.name}`); }} className="text-muted-foreground hover:text-destructive">
+                  <button onClick={() => { remove(product.slug); toast(`Removed ${product.name}`); }} className="text-muted-foreground hover:text-destructive">
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>

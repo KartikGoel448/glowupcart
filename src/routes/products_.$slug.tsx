@@ -1,32 +1,37 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Star, ShoppingBag, ArrowLeft, Truck, ShieldCheck, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getProduct, products } from "@/lib/products";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { catalogQueryOptions, getProductBySlug } from "@/lib/catalog";
 import { useCart } from "@/lib/cart-context";
 import { inr } from "@/lib/format";
 import { ProductCard } from "@/components/ProductCard";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/products_/$id")({
-  loader: ({ params }) => {
-    const product = getProduct(params.id);
+export const Route = createFileRoute("/products_/$slug")({
+  loader: async ({ context, params }) => {
+    const list = await context.queryClient.ensureQueryData(catalogQueryOptions);
+    const product = getProductBySlug(list, params.slug);
     if (!product) throw notFound();
-    return { product };
+    return { name: product.name, description: product.description, image: product.image };
   },
-  head: ({ loaderData }) => ({
-    meta: loaderData
-      ? [
-          { title: `${loaderData.product.name} — GlowCart` },
-          { name: "description", content: loaderData.product.description },
-          { property: "og:title", content: loaderData.product.name },
-          { property: "og:image", content: loaderData.product.image },
-        ]
-      : [],
-  }),
+  head: ({ loaderData }) =>
+    loaderData
+      ? {
+          meta: [
+            { title: `${loaderData.name} — GlowCart` },
+            { name: "description", content: loaderData.description.slice(0, 155) },
+            { property: "og:title", content: `${loaderData.name} — GlowCart` },
+            { property: "og:description", content: loaderData.description.slice(0, 155) },
+            { property: "og:type", content: "product" },
+            { name: "twitter:card", content: "summary_large_image" },
+          ],
+        }
+      : { meta: [{ title: "Unavailable — GlowCart" }, { name: "robots", content: "noindex" }] },
   notFoundComponent: () => (
     <div className="mx-auto max-w-3xl px-4 py-24 text-center">
       <h1 className="text-3xl font-bold">Product not found</h1>
-      <Link to="/products" search={{ category: "all" }} className="inline-block mt-4 text-primary font-semibold">← Back to shop</Link>
+      <Link to="/products" search={{ category: "all", brand: undefined }} className="inline-block mt-4 text-primary font-semibold">← Back to shop</Link>
     </div>
   ),
   errorComponent: ({ error, reset }) => {
@@ -42,22 +47,16 @@ export const Route = createFileRoute("/products_/$id")({
   component: ProductDetail,
 });
 
-const colorPalette = [
-  { name: "Onyx", hex: "#1a1a1a" },
-  { name: "Cream", hex: "#f1ece1" },
-  { name: "Forest", hex: "#2d4a3a" },
-  { name: "Clay", hex: "#b86a4b" },
-  { name: "Sky", hex: "#7aa6d6" },
-];
-
-const sizesByCategory: Record<string, string[]> = {
-  clothes: ["XS", "S", "M", "L", "XL", "XXL"],
-  accessories: ["One size"],
-  mobiles: ["128 GB", "256 GB", "512 GB", "1 TB"],
-  tablets: ["64 GB", "128 GB", "256 GB", "512 GB"],
-  laptops: ["8 GB / 256 GB", "16 GB / 512 GB", "16 GB / 1 TB"],
-  college: ["Standard", "Large"],
+const swatchHex: Record<string, string> = {
+  black: "#1a1a1a", onyx: "#1a1a1a", charcoal: "#36393d", graphite: "#4a4a4a",
+  white: "#f5f5f2", "off white": "#f1ece1", cream: "#f1ece1", ivory: "#f3efe6",
+  silver: "#c9ccd1", grey: "#9a9a9a", gray: "#9a9a9a", titanium: "#8d8b87",
+  navy: "#1f2a44", indigo: "#3b4b7a", blue: "#3f6fd8", sky: "#7aa6d6",
+  sage: "#a3b18a", forest: "#2d4a3a", green: "#3f7d52", olive: "#6b7250",
+  red: "#c0392b", clay: "#b86a4b", beige: "#ddd0b8", sand: "#d8c8a9",
+  pink: "#e6a5b8", purple: "#7c5cbf", gold: "#c9a227", "mid wash": "#6f8db3",
 };
+const hexFor = (name: string) => swatchHex[name.trim().toLowerCase()] ?? "#b9b4ab";
 
 const sampleReviews = [
   { name: "Ananya P.", rating: 5, date: "2 weeks ago", text: "Exactly as described. Quality is unreal for the price." },
@@ -66,42 +65,81 @@ const sampleReviews = [
 ];
 
 function ProductDetail() {
-  const { product } = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const { data: products } = useSuspenseQuery(catalogQueryOptions);
+  const product = getProductBySlug(products, slug)!;
   const { add } = useCart();
   const [qty, setQty] = useState(1);
-  const sizes = sizesByCategory[product.category] ?? ["One size"];
-  const colors = colorPalette.slice(0, product.category === "clothes" ? 5 : 3);
-  const [color, setColor] = useState(colors[0].name);
+  const sizes = product.sizes.length ? product.sizes : ["One size"];
+  const colors = product.colors.length ? product.colors : ["Standard"];
+  const [color, setColor] = useState(colors[0]);
   const [size, setSize] = useState(sizes[0]);
-  const related = products.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
+  const [active, setActive] = useState(0);
+  const [zoom, setZoom] = useState<{ x: number; y: number } | null>(null);
+  const related = products.filter((p) => p.category === product.category && p.slug !== product.slug).slice(0, 4);
 
   useEffect(() => {
-    setColor(colors[0].name);
+    setColor(colors[0]);
     setSize(sizes[0]);
+    setActive(0);
+    setQty(1);
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product.id]);
+  }, [product.slug]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-      <Link to="/products" search={{ category: "all" }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
+      <Link to="/products" search={{ category: "all", brand: undefined }} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
         <ArrowLeft className="h-4 w-4" /> Back to shop
       </Link>
 
       <div className="mt-6 grid lg:grid-cols-2 gap-10">
-        <div className="rounded-3xl overflow-hidden bg-secondary aspect-square shadow-card">
-          <img
-            src={product.image}
-            alt={product.name}
-            onError={(e) => {
-              const img = e.currentTarget;
-              if (!img.dataset.fallback) {
-                img.dataset.fallback = "1";
-                img.src = `https://picsum.photos/seed/${encodeURIComponent(product.id + product.name)}/1200/1200`;
-              }
+        <div>
+          <div
+            className="rounded-3xl overflow-hidden bg-secondary aspect-square shadow-card cursor-zoom-in"
+            onMouseMove={(e) => {
+              const r = e.currentTarget.getBoundingClientRect();
+              setZoom({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 });
             }}
-            className="h-full w-full object-cover"
-          />
+            onMouseLeave={() => setZoom(null)}
+          >
+            <img
+              src={product.images[active]}
+              alt={`${product.name} — view ${active + 1}`}
+              onError={(e) => {
+                const img = e.currentTarget;
+                if (!img.dataset.fallback) {
+                  img.dataset.fallback = "1";
+                  img.src = `https://picsum.photos/seed/${encodeURIComponent(product.slug)}/1200/1200`;
+                }
+              }}
+              style={{
+                transform: zoom ? "scale(1.9)" : "scale(1)",
+                transformOrigin: zoom ? `${zoom.x}% ${zoom.y}%` : "center",
+              }}
+              className="h-full w-full object-cover transition-transform duration-200"
+            />
+          </div>
+
+          {product.images.length > 1 && (
+            <div className="mt-4 grid grid-cols-4 gap-3">
+              {product.images.map((src, i) => (
+                <button
+                  type="button"
+                  key={src}
+                  onClick={() => setActive(i)}
+                  aria-label={`View image ${i + 1}`}
+                  aria-pressed={active === i}
+                  className={
+                    "aspect-square overflow-hidden rounded-xl bg-secondary border-2 transition " +
+                    (active === i ? "border-foreground" : "border-transparent hover:border-foreground/40")
+                  }
+                >
+                  <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div>
@@ -136,19 +174,19 @@ function ProductDetail() {
               <p className="text-[11px] tracking-brand uppercase font-semibold">Colour</p>
               <p className="text-xs text-muted-foreground">{color}</p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               {colors.map((c) => (
                 <button
                   type="button"
-                  key={c.name}
-                  onClick={() => setColor(c.name)}
-                  aria-label={c.name}
-                  aria-pressed={color === c.name}
+                  key={c}
+                  onClick={() => setColor(c)}
+                  aria-label={c}
+                  aria-pressed={color === c}
                   className={
                     "h-9 w-9 rounded-full border-2 transition " +
-                    (color === c.name ? "border-foreground scale-110 ring-2 ring-offset-2 ring-foreground/20" : "border-border hover:border-foreground/50")
+                    (color === c ? "border-foreground scale-110 ring-2 ring-offset-2 ring-foreground/20" : "border-border hover:border-foreground/50")
                   }
-                  style={{ backgroundColor: c.hex }}
+                  style={{ backgroundColor: hexFor(c) }}
                 />
               ))}
             </div>
@@ -160,7 +198,9 @@ function ProductDetail() {
               <p className="text-[11px] tracking-brand uppercase font-semibold">
                 {product.category === "clothes" ? "Size" : product.category === "mobiles" || product.category === "tablets" ? "Storage" : product.category === "laptops" ? "Configuration" : "Option"}
               </p>
-              <button className="text-[11px] tracking-brand uppercase text-muted-foreground hover:text-foreground">Size guide</button>
+              <span className="text-[11px] tracking-brand uppercase text-muted-foreground">
+                {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
+              </span>
             </div>
             <div className="flex flex-wrap gap-2">
               {sizes.map((s) => (
@@ -192,7 +232,7 @@ function ProductDetail() {
             </div>
             <button
               onClick={() => {
-                add(product.id, qty);
+                add(product.slug, qty);
                 toast.success(`Added ${qty} × ${product.name} (${color}, ${size})`);
               }}
               className="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-hero text-primary-foreground font-semibold shadow-pop hover:opacity-95"
@@ -250,12 +290,11 @@ function ProductDetail() {
         </div>
       </section>
 
-
       {related.length > 0 && (
         <section className="mt-20">
           <h2 className="text-2xl font-bold mb-6">You may also like</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
-            {related.map((p) => <ProductCard key={p.id} product={p} />)}
+            {related.map((p) => <ProductCard key={p.slug} product={p} />)}
           </div>
         </section>
       )}

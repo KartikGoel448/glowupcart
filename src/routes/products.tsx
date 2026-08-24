@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { useMemo, useState } from "react";
-import { byCategory, categories, products, type Category } from "@/lib/products";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { byCategory, catalogQueryOptions, categories, type Category } from "@/lib/catalog";
 import { ProductCard } from "@/components/ProductCard";
 
 const searchSchema = z.object({
@@ -17,17 +18,23 @@ export const Route = createFileRoute("/products")({
     ],
   }),
   validateSearch: searchSchema,
+  loader: ({ context }) => context.queryClient.ensureQueryData(catalogQueryOptions),
+  errorComponent: () => (
+    <div className="mx-auto max-w-3xl px-4 py-24 text-center text-muted-foreground">We couldn't load the catalogue. Please try again.</div>
+  ),
+  notFoundComponent: () => <div className="mx-auto max-w-3xl px-4 py-24 text-center">Nothing here.</div>,
   component: ProductsPage,
 });
 
 function ProductsPage() {
+  const { data: products } = useSuspenseQuery(catalogQueryOptions);
   const { category, brand } = Route.useSearch();
   const navigate = Route.useNavigate();
   const [sort, setSort] = useState<"featured" | "price-asc" | "price-desc" | "rating">("featured");
 
-  const baseList = byCategory(category as Category | "all");
+  const baseList = byCategory(products, category as Category | "all");
   const brandsInCategory = useMemo(() => {
-    const set = new Set(baseList.map((p) => p.brand));
+    const set = new Set<string>(baseList.map((p) => p.brand));
     return Array.from(set).sort();
   }, [baseList]);
 
@@ -121,7 +128,7 @@ function ProductsPage() {
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            {list.map((p) => <ProductCard key={p.id} product={p} />)}
+            {list.map((p) => <ProductCard key={p.slug} product={p} />)}
           </div>
         )}
 

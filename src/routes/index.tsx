@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { categories, products } from "@/lib/products";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { catalogQueryOptions, categories } from "@/lib/catalog";
 import { ProductCard } from "@/components/ProductCard";
 import { BrandMarquee } from "@/components/BrandMarquee";
 import { Reviews } from "@/components/Reviews";
@@ -13,6 +14,11 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Clothes, mobiles, tablets, laptops & accessories. Students save 15% with STUDENT15." },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(catalogQueryOptions),
+  errorComponent: () => (
+    <div className="mx-auto max-w-3xl px-4 py-24 text-center text-muted-foreground">We couldn't load the store right now. Please refresh.</div>
+  ),
+  notFoundComponent: () => <div className="mx-auto max-w-3xl px-4 py-24 text-center">Page not found.</div>,
   component: Home,
 });
 
@@ -41,6 +47,7 @@ const slides = [
 ];
 
 function Home() {
+  const { data: products } = useSuspenseQuery(catalogQueryOptions);
   const [slide, setSlide] = useState(0);
   const featured = products.filter((p) => p.tag).slice(0, 4);
   const trending = products.slice(0, 8);
@@ -125,7 +132,8 @@ function Home() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
             {categories.map((c, i) => {
-              const sample = products.find((p) => p.category === c.id)!;
+              const sample = products.find((p) => p.category === c.id);
+              if (!sample) return null;
               return (
                 <Link
                   key={c.id}
@@ -169,7 +177,7 @@ function Home() {
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8">
-          {featured.map((p) => <ProductCard key={p.id} product={p} />)}
+          {featured.map((p) => <ProductCard key={p.slug} product={p} />)}
         </div>
       </section>
 
@@ -209,7 +217,7 @@ function Home() {
           </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-8">
-          {trending.map((p) => <ProductCard key={p.id} product={p} />)}
+          {trending.map((p) => <ProductCard key={p.slug} product={p} />)}
         </div>
       </section>
 

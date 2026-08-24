@@ -1,7 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { products, type Product } from "./products";
+import { useQuery } from "@tanstack/react-query";
+import { catalogQueryOptions, type Product } from "./catalog";
 
 export interface CartLine {
+  /** product slug */
   productId: string;
   qty: number;
 }
@@ -32,6 +34,7 @@ export const PROMO_CODES: Record<string, { rate: number; label: string; min?: nu
 const CartCtx = createContext<CartState | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { data: catalog } = useQuery(catalogQueryOptions);
   const [lines, setLines] = useState<CartLine[]>(() => {
     if (typeof window === "undefined") return [];
     try {
@@ -54,6 +57,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [promo]);
 
   const value = useMemo<CartState>(() => {
+    const products = catalog ?? [];
     const add = (productId: string, qty = 1) =>
       setLines((prev) => {
         const found = prev.find((l) => l.productId === productId);
@@ -72,7 +76,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     const detailedLines = lines
       .map((l) => {
-        const product = products.find((p) => p.id === l.productId);
+        const product = products.find((p) => p.slug === l.productId);
         if (!product) return null;
         return { product, qty: l.qty, lineTotal: product.price * l.qty };
       })
@@ -113,7 +117,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       itemCount,
       detailedLines,
     };
-  }, [lines, promo]);
+  }, [lines, promo, catalog]);
 
   return <CartCtx.Provider value={value}>{children}</CartCtx.Provider>;
 }
