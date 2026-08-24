@@ -1,19 +1,19 @@
 import { Link } from "@tanstack/react-router";
-import { type Product } from "@/lib/products";
+import { type Product } from "@/lib/catalog";
 import { useCart } from "@/lib/cart-context";
 import { inr } from "@/lib/format";
 import { toast } from "sonner";
 
 const fallbackFor = (p: Product) =>
-  `https://picsum.photos/seed/${encodeURIComponent(p.id + p.name)}/800/1000`;
+  `https://picsum.photos/seed/${encodeURIComponent(p.slug)}/800/1000`;
 
 export function ProductCard({ product }: { product: Product }) {
   const { add } = useCart();
   return (
     <div className="group">
       <Link
-        to="/products/$id"
-        params={{ id: product.id }}
+        to="/products/$slug"
+        params={{ slug: product.slug }}
         preload={false}
         className="block relative aspect-[4/5] overflow-hidden bg-secondary"
       >
@@ -39,7 +39,7 @@ export function ProductCard({ product }: { product: Product }) {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            add(product.id);
+            add(product.slug);
             toast.success(`${product.name} added`);
           }}
           className="absolute bottom-3 left-3 right-3 py-2.5 bg-background text-foreground text-[11px] tracking-brand uppercase font-semibold opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all"
@@ -50,7 +50,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="mt-3 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[10px] tracking-brand uppercase text-muted-foreground">{product.brand}</p>
-          <Link to="/products/$id" params={{ id: product.id }} preload={false}>
+          <Link to="/products/$slug" params={{ slug: product.slug }} preload={false}>
             <h3 className="text-sm font-medium mt-1 hover:underline underline-offset-4 line-clamp-1">{product.name}</h3>
           </Link>
         </div>
