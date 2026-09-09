@@ -16,21 +16,20 @@ export function useAuth(): AuthState {
   useEffect(() => {
     let mounted = true;
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
-      if (!mounted) return;
-      setSession(next);
-      setLoading(false);
-    });
+    const refresh = () => {
+      supabase.auth.getSession().then(({ data }) => {
+        if (!mounted) return;
+        setSession(data.session);
+        setLoading(false);
+      });
+    };
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return;
-      setSession(data.session);
-      setLoading(false);
-    });
+    refresh();
+    window.addEventListener("glowcart-auth-change", refresh);
 
     return () => {
       mounted = false;
-      sub.subscription.unsubscribe();
+      window.removeEventListener("glowcart-auth-change", refresh);
     };
   }, []);
 
