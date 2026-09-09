@@ -1,33 +1,28 @@
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ShoppingBag, Search, User, Menu, X, ArrowRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useCart } from "@/lib/cart-context";
-import { useQuery } from "@tanstack/react-query";
 import { catalogQueryOptions } from "@/lib/catalog";
 import { inr } from "@/lib/format";
+import { displayName, useAuth } from "@/hooks/use-auth";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export function Navbar() {
   const { itemCount } = useCart();
   const { data: catalog } = useQuery(catalogQueryOptions);
+  const { user, loading } = useAuth();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [q, setQ] = useState("");
-  const [account, setAccount] = useState<{ email: string } | null>(null);
 
   useEffect(() => setMounted(true), []);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    try {
-      const stored = localStorage.getItem("gc:account");
-      if (stored) setAccount(JSON.parse(stored));
-    } catch {}
-  }, []);
 
-  // Close on Esc
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -47,14 +42,31 @@ export function Navbar() {
     const term = q.trim().toLowerCase();
     if (!term) return [];
     return (catalog ?? [])
-      .filter(
-        (p) =>
-          p.name.toLowerCase().includes(term) ||
-          p.brand.toLowerCase().includes(term) ||
-          p.category.toLowerCase().includes(term),
-      )
+      .filter((p) => p.name.toLowerCase().includes(term) || p.brand.toLowerCase().includes(term) || p.category.toLowerCase().includes(term))
       .slice(0, 8);
   }, [q, catalog]);
+
+  async function signOut() {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error("We couldn't sign you out. Please try again.");
+      return;
+    }
+    setAccountOpen(false);
+    setOpen(false);
+    navigate({ to: "/login", search: { redirect: undefined, mode: undefined }, replace: true });
+  }
+
+  function openAccount() {
+    if (loading) return;
+    if (!user) {
+      navigate({ to: "/login", search: { redirect: undefined, mode: undefined } });
+      return;
+    }
+    setAccountOpen(true);
+  }
 
   return (
     <header className="sticky top-0 z-40 bg-background border-b border-border">
@@ -65,43 +77,28 @@ export function Navbar() {
 
       <div className="mx-auto max-w-[1400px] px-5 lg:px-8 h-16 grid grid-cols-[1fr_auto_1fr] items-center">
         <nav className="hidden md:flex items-center gap-7 text-[13px] font-medium">
-          <Link to="/products" search={{ category: "all", brand: undefined }} className="hover:opacity-60 transition" activeProps={{ className: "underline underline-offset-4" }}>
-            Shop
-          </Link>
+          <Link to="/products" search={{ category: "all", brand: undefined }} className="hover:opacity-60 transition" activeProps={{ className: "underline underline-offset-4" }}>Shop</Link>
           <Link to="/products" search={{ category: "clothes", brand: undefined }} className="hover:opacity-60 transition">Clothes</Link>
           <Link to="/products" search={{ category: "laptops", brand: undefined }} className="hover:opacity-60 transition">Tech</Link>
           <Link to="/about" className="hover:opacity-60 transition">About</Link>
         </nav>
 
-        <button
-          className="md:hidden justify-self-start p-2 -ml-2"
-          onClick={() => setOpen((o) => !o)}
-          aria-label="Menu"
-        >
+        <button className="md:hidden justify-self-start p-2 -ml-2" onClick={() => setOpen((o) => !o)} aria-label="Menu">
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
 
-        <Link to="/" className="justify-self-center text-xl md:text-2xl font-black tracking-brand uppercase">
-          GlowCart
-        </Link>
+        <Link to="/" className="justify-self-center text-xl md:text-2xl font-black tracking-brand uppercase">GlowCart</Link>
 
         <div className="justify-self-end flex items-center gap-4 text-[13px]">
           <button onClick={() => setSearchOpen(true)} className="inline-flex items-center gap-1.5 hover:opacity-60" aria-label="Search">
-            <Search className="h-4 w-4" />
-            <span className="hidden lg:inline">Search</span>
+            <Search className="h-4 w-4" /><span className="hidden lg:inline">Search</span>
           </button>
-          <button onClick={() => setAccountOpen(true)} className="hidden md:inline-flex items-center gap-1.5 hover:opacity-60" aria-label="Account">
-            <User className="h-4 w-4" />
-            <span className="hidden lg:inline">{account ? "Hi, " + account.email.split("@")[0] : "Account"}</span>
+          <button onClick={openAccount} className="hidden md:inline-flex items-center gap-1.5 hover:opacity-60" aria-label="Account">
+            <User className="h-4 w-4" /><span className="hidden lg:inline">{loading ? "Account" : user ? displayName(user) : "Sign in"}</span>
           </button>
           <Link to="/cart" className="relative inline-flex items-center gap-1.5 hover:opacity-60">
-            <ShoppingBag className="h-4 w-4" />
-            <span className="hidden sm:inline">Cart</span>
-            {mounted && itemCount > 0 && (
-              <span className="ml-0.5 inline-grid place-items-center min-w-[18px] h-[18px] px-1 rounded-full bg-foreground text-background text-[10px] font-bold">
-                {itemCount}
-              </span>
-            )}
+            <ShoppingBag className="h-4 w-4" /><span className="hidden sm:inline">Cart</span>
+            {mounted && itemCount > 0 && <span className="ml-0.5 inline-grid place-items-center min-w-[18px] h-[18px] px-1 rounded-full bg-foreground text-background text-[10px] font-bold">{itemCount}</span>}
           </Link>
         </div>
       </div>
@@ -118,71 +115,31 @@ export function Navbar() {
               { label: "Accessories", category: "accessories" as const },
               { label: "College Essentials", category: "college" as const },
             ].map((l) => (
-              <Link
-                key={l.label}
-                to="/products"
-                search={{ category: l.category, brand: undefined }}
-                onClick={() => setOpen(false)}
-                className="py-1"
-              >
-                {l.label}
-              </Link>
+              <Link key={l.label} to="/products" search={{ category: l.category, brand: undefined }} onClick={() => setOpen(false)} className="py-1">{l.label}</Link>
             ))}
             <Link to="/about" onClick={() => setOpen(false)} className="py-1">About</Link>
-            <button onClick={() => { setOpen(false); setAccountOpen(true); }} className="text-left py-1">
-              {account ? "Account · " + account.email : "Sign in"}
-            </button>
+            <button onClick={() => { setOpen(false); openAccount(); }} className="text-left py-1">{user ? `Account · ${displayName(user)}` : "Sign in"}</button>
           </nav>
         </div>
       )}
 
-      {/* Search modal */}
       {searchOpen && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm" onClick={() => setSearchOpen(false)}>
-          <div
-            className="mx-auto mt-24 max-w-2xl bg-card border border-border rounded-2xl shadow-pop overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="mx-auto mt-24 max-w-2xl bg-card border border-border rounded-2xl shadow-pop overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-3 px-4 border-b border-border">
               <Search className="h-4 w-4 text-muted-foreground" />
-              <input
-                autoFocus
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Search products, brands, categories…"
-                className="flex-1 py-4 bg-transparent outline-none text-sm"
-              />
-              <button onClick={() => setSearchOpen(false)} className="p-1 text-muted-foreground hover:text-foreground">
-                <X className="h-4 w-4" />
-              </button>
+              <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search products, brands, categories…" className="flex-1 py-4 bg-transparent outline-none text-sm" />
+              <button onClick={() => setSearchOpen(false)} className="p-1 text-muted-foreground hover:text-foreground" aria-label="Close search"><X className="h-4 w-4" /></button>
             </div>
             <div className="max-h-[60vh] overflow-y-auto">
-              {q.trim() === "" ? (
-                <div className="p-6 text-sm text-muted-foreground">
-                  Try "iPhone", "Nike", "laptop" or "hostel"…
-                </div>
-              ) : results.length === 0 ? (
-                <div className="p-6 text-sm text-muted-foreground">No matches for "{q}".</div>
-              ) : (
+              {q.trim() === "" ? <div className="p-6 text-sm text-muted-foreground">Try "iPhone", "Nike", "laptop" or "hostel"…</div> : results.length === 0 ? <div className="p-6 text-sm text-muted-foreground">No matches for "{q}".</div> : (
                 <ul className="divide-y divide-border">
                   {results.map((p) => (
-                    <li key={p.slug}>
-                      <button
-                        onClick={() => {
-                          setSearchOpen(false);
-                          setQ("");
-                          navigate({ to: "/products/$slug", params: { slug: p.slug } });
-                        }}
-                        className="w-full flex items-center gap-3 p-3 hover:bg-secondary text-left"
-                      >
-                        <img src={p.image} alt="" className="h-12 w-12 object-cover rounded-md bg-secondary" />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[10px] uppercase tracking-brand text-muted-foreground">{p.brand} · {p.category}</p>
-                          <p className="text-sm font-medium truncate">{p.name}</p>
-                        </div>
-                        <span className="text-sm font-semibold">{inr(p.price)}</span>
-                      </button>
-                    </li>
+                    <li key={p.slug}><button onClick={() => { setSearchOpen(false); setQ(""); navigate({ to: "/products/$slug", params: { slug: p.slug } }); }} className="w-full flex items-center gap-3 p-3 hover:bg-secondary text-left">
+                      <img src={p.image} alt={p.name} className="h-12 w-12 object-cover rounded-md bg-secondary" />
+                      <div className="flex-1 min-w-0"><p className="text-[10px] uppercase tracking-brand text-muted-foreground">{p.brand} · {p.category}</p><p className="text-sm font-medium truncate">{p.name}</p></div>
+                      <span className="text-sm font-semibold">{inr(p.price)}</span>
+                    </button></li>
                   ))}
                 </ul>
               )}
@@ -191,73 +148,18 @@ export function Navbar() {
         </div>
       )}
 
-      {/* Account modal */}
-      {accountOpen && (
+      {accountOpen && user && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm grid place-items-center p-4" onClick={() => setAccountOpen(false)}>
           <div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-pop p-6" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold">{account ? "Your account" : "Sign in"}</h2>
-              <button onClick={() => setAccountOpen(false)} className="text-muted-foreground hover:text-foreground">
-                <X className="h-4 w-4" />
-              </button>
+            <div className="flex items-start justify-between mb-5">
+              <div><p className="text-xs uppercase tracking-brand text-muted-foreground">Your account</p><h2 className="mt-1 text-lg font-bold">{displayName(user)}</h2><p className="text-sm text-muted-foreground">{user.email}</p></div>
+              <button onClick={() => setAccountOpen(false)} className="text-muted-foreground hover:text-foreground" aria-label="Close account menu"><X className="h-4 w-4" /></button>
             </div>
-            {account ? (
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-secondary">
-                  <p className="text-xs text-muted-foreground">Signed in as</p>
-                  <p className="font-semibold">{account.email}</p>
-                </div>
-                <button
-                  onClick={() => {
-                    localStorage.removeItem("gc:account");
-                    setAccount(null);
-                    toast.success("Signed out");
-                  }}
-                  className="w-full py-2.5 rounded-xl border border-border hover:bg-secondary text-sm font-semibold"
-                >
-                  Sign out
-                </button>
-              </div>
-            ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const fd = new FormData(e.currentTarget);
-                  const email = String(fd.get("email") || "").trim();
-                  if (!email.includes("@")) {
-                    toast.error("Enter a valid email");
-                    return;
-                  }
-                  const next = { email };
-                  localStorage.setItem("gc:account", JSON.stringify(next));
-                  setAccount(next);
-                  setAccountOpen(false);
-                  toast.success("Welcome to GlowCart!");
-                }}
-                className="space-y-3"
-              >
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  placeholder="you@email.com"
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                />
-                <input
-                  name="password"
-                  type="password"
-                  required
-                  placeholder="Password"
-                  className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                />
-                <button className="w-full py-2.5 rounded-xl bg-gradient-hero text-primary-foreground font-semibold shadow-pop">
-                  Continue
-                </button>
-                <p className="text-[11px] text-muted-foreground text-center">
-                  By continuing you agree to our terms. Demo sign-in — saved locally.
-                </p>
-              </form>
-            )}
+            <div className="grid gap-2">
+              <Link to="/account" onClick={() => setAccountOpen(false)} className="rounded-xl border border-border px-4 py-3 text-sm font-semibold hover:bg-secondary">Account</Link>
+              <Link to="/orders" onClick={() => setAccountOpen(false)} className="rounded-xl border border-border px-4 py-3 text-sm font-semibold hover:bg-secondary">Orders</Link>
+              <button onClick={signOut} className="rounded-xl border border-border px-4 py-3 text-left text-sm font-semibold hover:bg-secondary">Sign out</button>
+            </div>
           </div>
         </div>
       )}

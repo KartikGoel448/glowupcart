@@ -156,12 +156,12 @@ function CartPage() {
               </div>
             </div>
 
-            <button
-              onClick={() => toast.success("Demo checkout — order placed! 🎉")}
-              className="mt-5 w-full px-6 py-3 rounded-xl bg-gradient-hero text-primary-foreground font-bold shadow-pop hover:opacity-95"
+            <Link
+              to="/checkout"
+              className="mt-5 w-full inline-flex justify-center px-6 py-3 rounded-xl bg-gradient-hero text-primary-foreground font-bold shadow-pop hover:opacity-95"
             >
               Checkout
-            </button>
+            </Link>
             <p className="text-[11px] text-center text-muted-foreground mt-3">
               {subtotal < 2000 ? `Add ${inr(2000 - subtotal)} more for free shipping` : "You unlocked free shipping 🎉"}
             </p>
