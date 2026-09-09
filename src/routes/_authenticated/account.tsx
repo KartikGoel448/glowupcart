@@ -45,7 +45,7 @@ function AccountPage() {
       setBusy(false);
       return;
     }
-    navigate({ to: "/login", replace: true });
+    navigate({ to: "/login", search: { redirect: undefined, mode: undefined }, replace: true });
   }
 
   if (!user) return null;

@@ -56,13 +56,13 @@ export function Navbar() {
     }
     setAccountOpen(false);
     setOpen(false);
-    navigate({ to: "/login", replace: true });
+    navigate({ to: "/login", search: { redirect: undefined, mode: undefined }, replace: true });
   }
 
   function openAccount() {
     if (loading) return;
     if (!user) {
-      navigate({ to: "/login" });
+      navigate({ to: "/login", search: { redirect: undefined, mode: undefined } });
       return;
     }
     setAccountOpen(true);
