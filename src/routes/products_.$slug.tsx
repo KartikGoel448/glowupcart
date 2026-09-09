@@ -81,7 +81,7 @@ function ProductDetail() {
   const selectedColourImage = product.imageVariants.find(
     (image) => image.colour?.trim().toLowerCase() === color.trim().toLowerCase(),
   );
-  const displayedImage = selectedColourImage?.url ?? product.images[active];
+  const displayedImage = selectedColourImage?.url ?? product.images[0];
 
   useEffect(() => {
     setColor(colors[0]);
@@ -184,7 +184,13 @@ function ProductDetail() {
                 <button
                   type="button"
                   key={c}
-                  onClick={() => setColor(c)}
+                  onClick={() => {
+                    setColor(c);
+                    const matchingImage = product.imageVariants.findIndex(
+                      (image) => image.colour?.trim().toLowerCase() === c.trim().toLowerCase(),
+                    );
+                    if (matchingImage >= 0) setActive(matchingImage);
+                  }}
                   aria-label={c}
                   aria-pressed={color === c}
                   className={
