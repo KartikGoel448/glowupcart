@@ -78,6 +78,11 @@ function ProductDetail() {
   const [zoom, setZoom] = useState<{ x: number; y: number } | null>(null);
   const related = products.filter((p) => p.category === product.category && p.slug !== product.slug).slice(0, 4);
 
+  const selectedColourImage = product.imageVariants.find(
+    (image) => image.colour?.trim().toLowerCase() === color.trim().toLowerCase(),
+  );
+  const displayedImage = selectedColourImage?.url ?? product.images[0];
+
   useEffect(() => {
     setColor(colors[0]);
     setSize(sizes[0]);
@@ -104,8 +109,8 @@ function ProductDetail() {
             onMouseLeave={() => setZoom(null)}
           >
             <img
-              src={product.images[active]}
-              alt={`${product.name} — view ${active + 1}`}
+              src={displayedImage}
+              alt={`${product.name} — ${color} — view ${active + 1}`}
               onError={(e) => {
                 const img = e.currentTarget;
                 if (!img.dataset.fallback) {
@@ -127,7 +132,7 @@ function ProductDetail() {
                 <button
                   type="button"
                   key={src}
-                  onClick={() => setActive(i)}
+                   onClick={() => setActive(i)}
                   aria-label={`View image ${i + 1}`}
                   aria-pressed={active === i}
                   className={
@@ -135,7 +140,7 @@ function ProductDetail() {
                     (active === i ? "border-foreground" : "border-transparent hover:border-foreground/40")
                   }
                 >
-                  <img src={src} alt="" className="h-full w-full object-cover" loading="lazy" />
+                  <img src={src} alt={`${product.name} gallery view ${i + 1}`} className="h-full w-full object-cover" loading="lazy" />
                 </button>
               ))}
             </div>
@@ -179,7 +184,13 @@ function ProductDetail() {
                 <button
                   type="button"
                   key={c}
-                  onClick={() => setColor(c)}
+                  onClick={() => {
+                    setColor(c);
+                    const matchingImage = product.imageVariants.findIndex(
+                      (image) => image.colour?.trim().toLowerCase() === c.trim().toLowerCase(),
+                    );
+                    if (matchingImage >= 0) setActive(matchingImage);
+                  }}
                   aria-label={c}
                   aria-pressed={color === c}
                   className={

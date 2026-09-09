@@ -18,22 +18,23 @@ export async function fetchCatalog(): Promise<Product[]> {
       .order("created_at", { ascending: true }),
     supabase
       .from("product_images")
-      .select("product_id, image_url, sort_order")
+      .select("product_id, image_url, sort_order, colour")
       .order("sort_order", { ascending: true }),
   ]);
 
   if (error) throw error;
   if (imgErr) throw imgErr;
 
-  const byProduct = new Map<string, string[]>();
+  const byProduct = new Map<string, { url: string; colour: string | null; sortOrder: number }[]>();
   for (const i of imgs ?? []) {
     const list = byProduct.get(i.product_id) ?? [];
-    list.push(i.image_url);
+    list.push({ url: i.image_url, colour: i.colour ?? null, sortOrder: i.sort_order });
     byProduct.set(i.product_id, list);
   }
 
   return (rows ?? []).map((r) => {
-    const images = byProduct.get(r.id) ?? [];
+    const imageVariants = byProduct.get(r.id) ?? [];
+    const images = imageVariants.map((item) => item.url);
     return {
       id: r.id,
       slug: r.slug,
@@ -51,6 +52,7 @@ export async function fetchCatalog(): Promise<Product[]> {
       tag: r.tag ?? undefined,
       image: images[0] ?? `/products/${r.slug}.jpg`,
       images: images.length ? images : [`/products/${r.slug}.jpg`],
+      imageVariants,
     } satisfies Product;
   });
 }
