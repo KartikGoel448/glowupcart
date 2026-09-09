@@ -20,6 +20,7 @@ export interface Product {
   tag?: string;
   image: string;
   images: string[];
+  imageVariants: { url: string; colour: string | null; sortOrder: number }[];
 }
 
 export const categories: { id: Category; label: string; emoji: string; blurb: string }[] = [
