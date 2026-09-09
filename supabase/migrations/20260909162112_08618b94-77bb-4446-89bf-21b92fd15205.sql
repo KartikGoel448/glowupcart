@@ -1,0 +1,1 @@
+ALTER TABLE public.product_images ADD COLUMN colour text;
